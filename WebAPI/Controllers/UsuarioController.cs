@@ -12,26 +12,34 @@ namespace WebAPI.Controllers
     [Authorize]
     public class UsuarioController : ControllerBase
     {
-        private readonly BusinessLayer.IBL.IBL_Usuario _bl;
+        private readonly BusinessLayer.IBL_Usuario _bl;
 
-        public UsuarioController(BusinessLayer.IBL.IBL_Usuario bl)
+        public UsuarioController(BusinessLayer.IBL_Usuario bl)
         {
             _bl = bl;
         }
 
         //GET: api/<UsuarioController>
         [HttpGet]
-        public IEnumerable<Shared.Dominio.Usuario> Get()
+        public IEnumerable<Shared.Dominio.UsuarioDto> Get()
         {
             return _bl.GetUsuarios();
         }
 
-        //GET: api/<UsuarioController>
+        //POST: api/<UsuarioController>
         [AllowAnonymous]
         [HttpPost]
-        public Shared.Dominio.Usuario Post([FromBody] Shared.Dominio.Usuario x)
+        public async Task<ActionResult> Post([FromBody] Shared.Dominio.UsuarioDto x)
         {
-            return _bl.AddUsuario(x);
+            var res = await _bl.AddUsuarioAsync(x);
+            if (res.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

@@ -1,16 +1,23 @@
+using AutoMapper;
 using DataAccessLayer;
+using DataAccessLayer.Entidades;
+using DataAccessLayer.Extensiones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +44,9 @@ namespace WebAPI
                 Configuration.GetConnectionString("DbConnection")
                 )
             ));
+
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
             services.AddControllers();
@@ -68,8 +78,20 @@ namespace WebAPI
                 });
             });
 
-
-            //Obteniendo Clave Secrete
+            services.AddIdentityCore<DataAccessLayer.Entidades.Usuario>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequiredLength = 0;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.User.RequireUniqueEmail = true;
+                }
+            ).AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<WebAPIContext>();
+            //Obteniendo Clave Secreta
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("Secret"));
 
             services.AddAuthentication(options =>
@@ -92,15 +114,34 @@ namespace WebAPI
                 };
             });
 
+            services.AddCors();
+
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperDataTypes());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+
+
             // Inyeccion de dependencias
-            services.AddScoped<DataAccessLayer.IDAL.IDAL_Usuario, DataAccessLayer.DAL.DAL_Usuario>();
-            services.AddScoped<BusinessLayer.IBL.IBL_Usuario, BusinessLayer.BL.BL_Usuario>();
+
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
+            services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
+
+            services.AddScoped<BusinessLayer.IBL_Admin, BusinessLayer.BL.BL_Admin>();
+            services.AddScoped<BusinessLayer.IBL_Usuario, BusinessLayer.BL.BL_Usuario>();
+            services.AddScoped<BusinessLayer.IBL_Institucion, BusinessLayer.BL.BL_Institucion>();
+
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<Usuario> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -111,6 +152,10 @@ namespace WebAPI
 
             }
 
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+            );
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -118,6 +163,9 @@ namespace WebAPI
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            
+            DbIncializador.SeedUsuarios(userManager);
 
             app.UseEndpoints(endpoints =>
             {

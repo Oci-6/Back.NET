@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211023225859_WebAPI")]
+    partial class WebAPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,14 +46,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Apellido")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Documento")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -92,9 +88,6 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<Guid?>("TenantInstitucionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TipoDocumento")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -147,29 +140,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f7dba5ac-6fb3-495a-bfda-47831cfac94d",
-                            ConcurrencyStamp = "bbe89365-eaad-4567-9277-63eae6c573d0",
+                            Id = "34a98e09-805f-40e7-9a4d-06553dc02f10",
+                            ConcurrencyStamp = "8ad58d3b-85d4-488d-a1e8-f1891d22735a",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "5d090c20-0323-4bdf-b650-2ff421547ad2",
-                            ConcurrencyStamp = "91e9f414-9585-413f-a623-8b6894ecda48",
+                            Id = "7fd750c0-8769-46ca-a76e-410139f96899",
+                            ConcurrencyStamp = "35d6b8d0-a4d4-48b6-b68b-d32f70347878",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f33f0dd9-1edf-4c63-a1b9-56931b48d402",
-                            ConcurrencyStamp = "cd9ae0c9-0917-4e67-8d62-2e3e673f2266",
+                            Id = "c0b550a3-769d-4715-a7ae-6d1ee5ac2408",
+                            ConcurrencyStamp = "823a8ab7-738f-4183-b66f-eafaa8a7e460",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "ebb7f9f7-8484-4a44-a820-eb337e0353c5",
-                            ConcurrencyStamp = "b0ff21e9-78ab-4d91-a92b-af17a28f9a7d",
+                            Id = "4cc2b18d-acbd-41cc-ac0d-af2fa6263b5f",
+                            ConcurrencyStamp = "eccd89a5-7ff6-4f51-9819-fcbd55701cf4",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });

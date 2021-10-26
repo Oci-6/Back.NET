@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Shared.Dominio
 {
-    public class Usuario
+    public class InstitucionDto
     {
-        public Guid id { get; set; }
-        public string nombre { get; set; }
-        public string apellido { get; set; }
+        public Guid Id { get; set; }
+        public string RazonSocial { get; set; }
+        public string Rut { get; set; }
     }
 }

@@ -16,35 +16,38 @@ namespace WebAPI.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly BusinessLayer.IBL.IBL_Usuario _bl;
+        private readonly BusinessLayer.IBL_Usuario _bl;
         private readonly IConfiguration _configuration;
-        public LoginController(BusinessLayer.IBL.IBL_Usuario bl, IConfiguration configuration)
+        public LoginController(BusinessLayer.IBL_Usuario bl, IConfiguration configuration)
         {
             _bl = bl;
             _configuration = configuration;
         }
 
         [HttpPost]
-        public ActionResult<Usuario> Post(UsuarioLogin x)
+        public async Task<ActionResult<LoginResult>> PostAsync(UsuarioLogin x)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            Usuario usuario = _bl.GetUsuarios().Where(element => x.nombre == element.nombre).FirstOrDefault();
+            UsuarioDto usuario = _bl.GetUsuarios().Where(element => x.Email == element.Email).FirstOrDefault();
 
-            if(usuario == null)
+            if (usuario == null)
             {
                 return NotFound();
             }
             else
             {
+                var roles = await _bl.GetRolesUsuarioAsync(usuario.Id);
+
                 var secretKey = _configuration.GetValue<string>("Secret");
                 var key = Encoding.ASCII.GetBytes(secretKey);
 
                 var claims = new ClaimsIdentity();
-                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.nombre));
+                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Email));
+                roles.ToList().ForEach(i => claims.AddClaim(new Claim(ClaimTypes.Role, i)));
 
                 var tokenDescriptor = new SecurityTokenDescriptor()
                 {
@@ -53,12 +56,17 @@ namespace WebAPI.Controllers
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var createdToken = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var createdToken = tokenHandler.CreateToken(tokenDescriptor);
                 string bearerToken = tokenHandler.WriteToken(createdToken);
 
 
-                    return Ok(bearerToken);
+                return Ok(new LoginResult()
+                {
+                    Usuario = usuario,
+                    Token = bearerToken,
+                    Roles = roles
+                });
             }
         }
     }
