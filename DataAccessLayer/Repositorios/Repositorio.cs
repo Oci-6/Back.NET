@@ -56,6 +56,7 @@ namespace DataAccessLayer.Repositorios
             {
                 throw new ArgumentNullException("entity");
             }
+            db.Update(entity);
             db.SaveChanges();
         }
     }
