@@ -132,7 +132,7 @@ namespace WebAPI
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
-            services.AddScoped<BusinessLayer.IBL_Admin, BusinessLayer.BL.BL_Admin>();
+            services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
             services.AddScoped<BusinessLayer.IBL_Usuario, BusinessLayer.BL.BL_Usuario>();
             services.AddScoped<BusinessLayer.IBL_Institucion, BusinessLayer.BL.BL_Institucion>();
 

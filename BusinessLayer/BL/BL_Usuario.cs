@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Shared.Dominio;
 using System;
@@ -15,9 +16,19 @@ namespace BusinessLayer.BL
     {
         private readonly UserManager<Usuario> userManager;
         private readonly IMapper mapper;
+        private readonly Guid tenantId;
 
-        public BL_Usuario(UserManager<Usuario> _userManager, IMapper _mapper)
+        public BL_Usuario(UserManager<Usuario> _userManager, IMapper _mapper, IHttpContextAccessor contextAccessor)
         {
+            var tenantActual = contextAccessor.HttpContext?.Request.Headers["TenantId"];
+            if (!string.IsNullOrWhiteSpace(tenantActual))
+            {
+                tenantId = Guid.Parse(tenantActual);
+            }
+            else
+            {
+                tenantId = Guid.Empty;
+            }
             mapper = _mapper;
 
             userManager = _userManager;
@@ -27,9 +38,9 @@ namespace BusinessLayer.BL
         {
             var user = mapper.Map<Usuario>(x);
             user.UserName = x.Email;
+            user.TenantInstitucionId = tenantId != Guid.Empty ? tenantId : null;
             IdentityResult identityResult = await userManager.CreateAsync(user, x.Password);
     
-
             return identityResult;
         }
 
@@ -41,7 +52,10 @@ namespace BusinessLayer.BL
         public async Task<Shared.Dominio.UsuarioDto> GetUsuarioAsync(string id)
         {
             var e = await userManager.FindByIdAsync(id);
-
+            if (e.TenantInstitucionId != tenantId && tenantId != Guid.Empty)
+            {
+                return null;
+            }
 
             return mapper.Map<Shared.Dominio.UsuarioDto>(e);
 
@@ -50,7 +64,7 @@ namespace BusinessLayer.BL
         public IEnumerable<Shared.Dominio.UsuarioDto> GetUsuarios()
         {
 
-            var usuarios = mapper.Map<IEnumerable<Shared.Dominio.UsuarioDto>>(userManager.Users);
+            var usuarios = mapper.Map<IEnumerable<Shared.Dominio.UsuarioDto>>(userManager.Users.Where(element => element.TenantInstitucionId == tenantId || tenantId == Guid.Empty));
             return usuarios;
         }
 

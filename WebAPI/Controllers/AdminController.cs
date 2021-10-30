@@ -13,13 +13,13 @@ namespace WebAPI.Controllers
     [Authorize]
     public class AdminController : ControllerBase
     {
-        private readonly BusinessLayer.IBL_Admin bl;
-        private readonly BusinessLayer.IBL_Usuario bl_usuario;
+        private readonly BusinessLayer.IBL_Roles roles;
+        private readonly BusinessLayer.IBL_Usuario usuario;
 
-        public AdminController(BusinessLayer.IBL_Admin _bl, BusinessLayer.IBL_Usuario _bl_usuario)
+        public AdminController(BusinessLayer.IBL_Roles roles, BusinessLayer.IBL_Usuario usuario)
         {
-            bl = _bl;
-            bl_usuario = _bl_usuario;
+            this.roles = roles;
+            this.usuario = usuario;
         }
 
         //POST: api/<AdminController>
@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> Post([FromBody] Shared.Dominio.UsuarioDto x)
         {
             x.Id = Guid.NewGuid().ToString();
-            var res = await bl_usuario.AddUsuarioAsync(x);
+            var res = await usuario.AddUsuarioAsync(x);
             if (res.Succeeded)
             {
-                var resRol = await bl.AddAdminAsync(x);
+                var resRol = await roles.AddRol(x, "Admin");
                 if (resRol.Succeeded)
                 {
                     return NoContent();
@@ -50,14 +50,15 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Shared.Dominio.UsuarioDto>> GetAsync()
         {
-            return await bl.GetAdminsAsync();
+            var users = await roles.GetUsuariosEnRol("Admin");
+            return users;
         }
 
         //GET: api/<AdminController>/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Shared.Dominio.UsuarioDto>> GetAsync(string id)
         {
-            var res = await bl_usuario.GetUsuarioAsync(id);
+            var res = await usuario.GetUsuarioAsync(id);
             if(res == null)
             {
                 return NotFound();
@@ -71,7 +72,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> PutAsync([FromBody] Shared.Dominio.UsuarioDto x, string id)
         {
-            if((await bl_usuario.PutUsuarioAsync(x,id)).Succeeded)
+            if((await usuario.PutUsuarioAsync(x,id)).Succeeded)
             {
                 return NoContent();
             }
@@ -81,7 +82,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync( string id)
         {
-            if ((await bl_usuario.DeleteUsuarioAsync(id)).Succeeded)
+            if ((await usuario.DeleteUsuarioAsync(id)).Succeeded)
             {
                 return Ok();
             }
