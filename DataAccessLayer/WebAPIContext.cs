@@ -30,16 +30,20 @@ namespace DataAccessLayer
                 tenantId = Guid.Empty;
             }
 
-            this.Filter<BaseEntity>(f => f.Where(q => q.TenantInstitucion.Id == tenantId));
+            this.Filter<TenantEntity>(f => f.Where(q => q.TenantInstitucion.Id == tenantId));
 
         }
 
         public DbSet<TenantInstitucion> Tenants { get; set; }
 
+        public DbSet<Edificio> Edificios { get; set; }
+        public DbSet<Puerta> Puertas { get; set; }
+        public DbSet<Salon> Salones { get; set; }
+
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            foreach (var entry in ChangeTracker.Entries<TenantEntity>())
             {
                 switch (entry.State)
                 {

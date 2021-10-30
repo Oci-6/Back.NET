@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entidades
 {
-    public class BaseEntity
+    public class TenantEntity : BaseEntity
     {
-        public Guid Id { get; set; }
-        public DateTime CreadoEn { get; set; }
-        public DateTime? ModificadoEn { get; set; }
-
+        public TenantInstitucion TenantInstitucion { get; set; }
+        public Guid TenantInstitucionId { get; set; }
     }
 }
