@@ -8,6 +8,7 @@ namespace DataAccessLayer.Entidades
 {
     public class Edificio : TenantEntity
     {
+        public string Nombre { get; set; }
         public string Latitud { get; set; }
         public string Longitud { get; set; }
     }
