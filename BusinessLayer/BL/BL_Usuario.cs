@@ -38,7 +38,7 @@ namespace BusinessLayer.BL
         {
             var user = mapper.Map<Usuario>(x);
             user.UserName = x.Email;
-            user.TenantInstitucionId = tenantId != Guid.Empty ? tenantId : null;
+            user.TenantInstitucionId = tenantId != Guid.Empty ? tenantId : user.TenantInstitucionId;
             IdentityResult identityResult = await userManager.CreateAsync(user, x.Password);
     
             return identityResult;
