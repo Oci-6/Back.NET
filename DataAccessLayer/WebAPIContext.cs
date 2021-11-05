@@ -69,7 +69,8 @@ namespace DataAccessLayer
                 new IdentityRole { Name = "SuperAdmin", NormalizedName = "SuperAdmin".ToUpper() },
                 new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() },
                 new IdentityRole { Name = "Gestor", NormalizedName = "Gestor".ToUpper() },
-                new IdentityRole { Name = "Portero", NormalizedName = "Portero".ToUpper() });
+                new IdentityRole { Name = "Portero", NormalizedName = "Portero".ToUpper() },
+                new IdentityRole { Name = "Persona", NormalizedName = "Persona".ToUpper() });
 
         }
     }
