@@ -10,16 +10,121 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    [Migration("20211105143554_v8")]
-    partial class v8
+    [Migration("20211110151049_v9")]
+    partial class v9
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Acceso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EdificioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModificadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EdificioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Accesos");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Edificio", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Latitud")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Longitud")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModificadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TenantInstitucionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantInstitucionId");
+
+                    b.ToTable("Edificios");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EdificioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModificadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EdificioId");
+
+                    b.ToTable("Puertas");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Salon", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EdificioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModificadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EdificioId");
+
+                    b.ToTable("Salones");
+                });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.TenantInstitucion", b =>
                 {
@@ -149,36 +254,36 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2bc5d5a1-3242-4171-9243-6208ca3b404b",
-                            ConcurrencyStamp = "6d04711d-93da-4a68-ba2f-e4adaa5fe823",
+                            Id = "cdb8a023-d89a-42a5-a4e0-c5c66149b04e",
+                            ConcurrencyStamp = "94c8d232-3336-46ce-b25b-838462b71b21",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "e594c207-431f-4874-8097-7f03aee29dd4",
-                            ConcurrencyStamp = "2838a3a1-aa8c-43ab-ad01-5ec97eb3d37e",
+                            Id = "84567553-020e-4b23-8005-0c71040cacac",
+                            ConcurrencyStamp = "224a22e6-3986-4789-8839-3916dc2b30c0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "25bdee72-a387-4e15-9353-a557b3cdcc9d",
-                            ConcurrencyStamp = "425fa089-bc2f-4496-875c-9bc28a957ba9",
+                            Id = "32aa01fb-3b7c-46bf-85ba-331d1274c3a0",
+                            ConcurrencyStamp = "f4323770-dd5d-48ef-a8f4-28cf3eb6d446",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "12419e75-3355-42f7-9fb8-8f6ab6d6d9f9",
-                            ConcurrencyStamp = "6c3a6e39-611f-42af-9747-090ef50481b3",
+                            Id = "7bc29f5e-aed1-45c8-80f8-b2890a170c3d",
+                            ConcurrencyStamp = "7edc3e83-73e2-4d82-b0c8-a7608c904d6b",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         },
                         new
                         {
-                            Id = "2ddc010a-3ff5-4b6e-aa95-414c72b3f94b",
-                            ConcurrencyStamp = "bb3f46d4-66c2-4427-bb4d-6d4f1cb46cf3",
+                            Id = "91f6d0e8-9358-4421-8a26-77a9879cba9b",
+                            ConcurrencyStamp = "34aaf93c-4258-4706-9110-26ddbddb91db",
                             Name = "Persona",
                             NormalizedName = "PERSONA"
                         });
@@ -286,6 +391,56 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Acceso", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
+                        .WithMany()
+                        .HasForeignKey("EdificioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entidades.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Edificio");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Edificio", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entidades.TenantInstitucion", "TenantInstitucion")
+                        .WithMany()
+                        .HasForeignKey("TenantInstitucionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TenantInstitucion");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
+                        .WithMany()
+                        .HasForeignKey("EdificioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Edificio");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Salon", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
+                        .WithMany()
+                        .HasForeignKey("EdificioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Edificio");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Usuario", b =>

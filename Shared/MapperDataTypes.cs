@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using Shared.Dominio;
+using Shared.Dominio.Acceso;
 using Shared.Dominio.Edificio;
 using Shared.Dominio.Novedades;
 using Shared.Dominio.Precio;
@@ -34,7 +35,7 @@ namespace Shared
             CreateMap<Producto, ProductoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AgregarProductoDto, Producto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-
+            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
         }
     }
 }
