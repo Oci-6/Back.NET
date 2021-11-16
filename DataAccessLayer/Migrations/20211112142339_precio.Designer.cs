@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211112142339_precio")]
+    partial class precio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,40 +101,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<float>("Monto")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("ProductoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
 
                     b.ToTable("Precio");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entidades.Producto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CantMaxEdificios")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CantMaxSalones")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModificadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Producto");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
@@ -313,29 +284,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "393cdd1d-f84f-42d3-9dca-250f65d095fa",
-                            ConcurrencyStamp = "c33b25cc-097b-4aeb-a286-c2f5d429cf61",
+                            Id = "f4a27196-6afe-40e8-ac1a-30f6bef49b9b",
+                            ConcurrencyStamp = "e19b3ca4-5bba-4d90-801e-416a4bb4b5af",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "f4184379-711b-4a59-8ff2-9075d3aab038",
-                            ConcurrencyStamp = "bd6b4d32-b038-49ab-b2fb-c00d293d7ec2",
+                            Id = "5c09dcfb-0310-4b44-9f99-760b6404cddc",
+                            ConcurrencyStamp = "7f7304ec-6b46-4b60-82d3-4844c18c697b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8645bd1f-7a53-42ba-a621-5763495ec5c3",
-                            ConcurrencyStamp = "52c73386-2d67-4885-9023-0c874f03bced",
+                            Id = "d9350d0d-fa89-4fa2-a9d9-b08df3423876",
+                            ConcurrencyStamp = "32061480-6b07-4977-973c-60c07f95e602",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "c01bce7a-1437-46fd-9dd0-c4536c92feda",
-                            ConcurrencyStamp = "bb0ad611-9a78-4a54-9239-e2d24681d833",
+                            Id = "6693050b-571a-4560-aec6-746647279a96",
+                            ConcurrencyStamp = "2a4a0fa5-2f56-4f6f-b269-69d4d9b07669",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });
@@ -467,15 +438,6 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Edificio");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entidades.Precio", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entidades.Producto", null)
-                        .WithMany("Precios")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
                 {
                     b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
@@ -556,11 +518,6 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entidades.Producto", b =>
-                {
-                    b.Navigation("Precios");
                 });
 #pragma warning restore 612, 618
         }

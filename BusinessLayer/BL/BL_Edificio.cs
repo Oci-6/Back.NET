@@ -54,6 +54,7 @@ namespace BusinessLayer.BL
         public void PutEdificio(EdificioDto x, Guid id)
         {
             var edificio = repositorio.Get(id);
+            edificio.Nombre = x.Nombre;
             edificio.Latitud = x.Latitud;
             edificio.Longitud = x.Longitud;
 

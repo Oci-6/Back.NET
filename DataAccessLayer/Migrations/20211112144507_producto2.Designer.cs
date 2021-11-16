@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211112144507_producto2")]
+    partial class producto2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +101,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<float>("Monto")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("ProductoId")
+                    b.Property<Guid?>("ProductoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -313,29 +315,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "393cdd1d-f84f-42d3-9dca-250f65d095fa",
-                            ConcurrencyStamp = "c33b25cc-097b-4aeb-a286-c2f5d429cf61",
+                            Id = "6bc945b9-c7af-453a-9d6d-0f26647cffc7",
+                            ConcurrencyStamp = "eea7c93d-8c5e-47be-a30a-7a2873312bca",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "f4184379-711b-4a59-8ff2-9075d3aab038",
-                            ConcurrencyStamp = "bd6b4d32-b038-49ab-b2fb-c00d293d7ec2",
+                            Id = "a2b8e53f-c9b4-454b-b41f-9265bc5a7ee8",
+                            ConcurrencyStamp = "08989a56-ddfc-4284-9f11-59283c793077",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8645bd1f-7a53-42ba-a621-5763495ec5c3",
-                            ConcurrencyStamp = "52c73386-2d67-4885-9023-0c874f03bced",
+                            Id = "351c1021-e282-4631-85d3-be96b16b3ccb",
+                            ConcurrencyStamp = "4302323f-cb6c-42f1-bef2-f32cc80a6c57",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "c01bce7a-1437-46fd-9dd0-c4536c92feda",
-                            ConcurrencyStamp = "bb0ad611-9a78-4a54-9239-e2d24681d833",
+                            Id = "ba605798-626e-4c6e-a839-918e48898dc1",
+                            ConcurrencyStamp = "54e04730-0026-4328-81b2-78e72ddda4fb",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });
@@ -471,9 +473,7 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasOne("DataAccessLayer.Entidades.Producto", null)
                         .WithMany("Precios")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductoId");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
