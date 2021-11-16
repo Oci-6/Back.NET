@@ -19,6 +19,33 @@ namespace DataAccessLayer.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DataAccessLayer.Entidades.Acceso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EdificioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModificadoEn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EdificioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Accesos");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entidades.Edificio", b =>
                 {
                     b.Property<Guid>("Id")
@@ -225,31 +252,38 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1a2fa49d-b6b4-4730-926d-be60231e7b74",
-                            ConcurrencyStamp = "fe496b25-1812-4811-8cbf-1e6d8f873444",
+                            Id = "cdb8a023-d89a-42a5-a4e0-c5c66149b04e",
+                            ConcurrencyStamp = "94c8d232-3336-46ce-b25b-838462b71b21",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "94343b70-af12-487a-8366-48ba97499824",
-                            ConcurrencyStamp = "0d3e80b2-0130-4cdc-a5e3-e70dcdad9fc4",
+                            Id = "84567553-020e-4b23-8005-0c71040cacac",
+                            ConcurrencyStamp = "224a22e6-3986-4789-8839-3916dc2b30c0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2357f7ad-aca4-4cc4-9f2c-ca3f7f917340",
-                            ConcurrencyStamp = "1602845f-55df-4324-a703-9ecb49708879",
+                            Id = "32aa01fb-3b7c-46bf-85ba-331d1274c3a0",
+                            ConcurrencyStamp = "f4323770-dd5d-48ef-a8f4-28cf3eb6d446",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "f6c4335f-aa19-43cc-81eb-e11a06d82f0a",
-                            ConcurrencyStamp = "cf78450e-3f2b-42b5-92f8-61b19129770b",
+                            Id = "7bc29f5e-aed1-45c8-80f8-b2890a170c3d",
+                            ConcurrencyStamp = "7edc3e83-73e2-4d82-b0c8-a7608c904d6b",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
+                        },
+                        new
+                        {
+                            Id = "91f6d0e8-9358-4421-8a26-77a9879cba9b",
+                            ConcurrencyStamp = "34aaf93c-4258-4706-9110-26ddbddb91db",
+                            Name = "Persona",
+                            NormalizedName = "PERSONA"
                         });
                 });
 
@@ -355,6 +389,23 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entidades.Acceso", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
+                        .WithMany()
+                        .HasForeignKey("EdificioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entidades.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Edificio");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Edificio", b =>

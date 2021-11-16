@@ -41,7 +41,7 @@ namespace WebAPI
 
             services.AddDbContext<WebAPIContext>((options => options
             .UseSqlServer(
-                Configuration.GetConnectionString("DbConnection")
+                Configuration.GetConnectionString("DbConnectionMauricio")
                 )
             ));
 
@@ -136,6 +136,7 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Usuario, BusinessLayer.BL.BL_Usuario>();
             services.AddScoped<BusinessLayer.IBL_Institucion, BusinessLayer.BL.BL_Institucion>();
             services.AddScoped<BusinessLayer.IBL_Edificio, BusinessLayer.BL.BL_Edificio>();
+            services.AddScoped<BusinessLayer.IBL_Acceso, BusinessLayer.BL.BL_Acceso>();
             services.AddScoped<BusinessLayer.IBL_Puerta, BusinessLayer.BL.BL_Puerta>();
             services.AddScoped<BusinessLayer.IBL_Salon, BusinessLayer.BL.BL_Salon>();
 

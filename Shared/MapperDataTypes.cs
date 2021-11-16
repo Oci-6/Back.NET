@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using Shared.Dominio;
+using Shared.Dominio.Acceso;
 using Shared.Dominio.Edificio;
 using Shared.Dominio.Puerta;
 using Shared.Dominio.Salon;
@@ -21,6 +22,7 @@ namespace Shared
             CreateMap<Edificio, EdificioDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
             CreateMap<Puerta, PuertaDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
             CreateMap<Salon, SalonDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
+            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
         }
     }
 }

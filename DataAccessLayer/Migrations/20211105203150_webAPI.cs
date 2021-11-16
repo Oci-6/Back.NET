@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class v1 : Migration
+    public partial class webAPI : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -203,6 +203,7 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EdificioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreadoEn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModificadoEn = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -218,15 +219,37 @@ namespace DataAccessLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Salones",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EdificioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreadoEn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificadoEn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salones_Edificios_EdificioId",
+                        column: x => x.EdificioId,
+                        principalTable: "Edificios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "9792803a-5a32-444e-95b0-1df840e4c606", "f716c8fe-c7c5-4938-8f48-2e5341766fdb", "SuperAdmin", "SUPERADMIN" },
-                    { "bfea6005-6e38-48a8-958e-ea6625ef0d7a", "8a5bea3a-34ee-48f8-923e-9c4e79837e45", "Admin", "ADMIN" },
-                    { "1eedc8f8-cf9d-47ef-8b90-4c5cdd9a0e62", "9a3a1cac-0edd-476f-93ba-c8ec96109c0f", "Gestor", "GESTOR" },
-                    { "9bcea184-f1cb-4d4f-9c77-1abacc708999", "a8f229eb-7819-4899-804d-4d26846bea48", "Portero", "PORTERO" }
+                    { "367e8c73-5253-4956-985a-0ec8c5fb95ce", "f3b34841-b01b-4c9d-8e39-d03fb3a88bca", "SuperAdmin", "SUPERADMIN" },
+                    { "0e3b511e-3e16-48a6-ad69-9a4e146b1052", "b48c010f-0a8f-4d91-a950-678f5d4344fc", "Admin", "ADMIN" },
+                    { "5fbbff3b-4ad3-4e6e-9c7e-aed9fa6ebdd5", "3eda2228-f076-4239-a236-25ffc35ee259", "Gestor", "GESTOR" },
+                    { "04222183-49a0-43e5-9fb5-553abcbf3156", "8bce91ea-d5f9-4dc4-88d0-c334bc817c95", "Portero", "PORTERO" },
+                    { "6216016b-70c8-40a2-ab89-8f6c32e713a5", "84c9f986-25af-46be-bb48-c4fcbe4e7361", "Persona", "PERSONA" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -282,6 +305,11 @@ namespace DataAccessLayer.Migrations
                 name: "IX_Puertas_EdificioId",
                 table: "Puertas",
                 column: "EdificioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salones_EdificioId",
+                table: "Salones",
+                column: "EdificioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -303,6 +331,9 @@ namespace DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Puertas");
+
+            migrationBuilder.DropTable(
+                name: "Salones");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
