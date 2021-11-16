@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211112204039_list")]
+    partial class list
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,8 +92,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("CreadoEn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Fecha_Validez")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Fecha_Validez")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModificadoEn")
                         .HasColumnType("datetime2");
@@ -99,7 +101,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<float>("Monto")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("ProductoId")
+                    b.Property<Guid?>("ProductoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -313,29 +315,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "393cdd1d-f84f-42d3-9dca-250f65d095fa",
-                            ConcurrencyStamp = "c33b25cc-097b-4aeb-a286-c2f5d429cf61",
+                            Id = "2902a66b-4230-458c-980e-10819422249c",
+                            ConcurrencyStamp = "2faf4a57-6b84-41ab-98c1-c9dcc8ebfba7",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "f4184379-711b-4a59-8ff2-9075d3aab038",
-                            ConcurrencyStamp = "bd6b4d32-b038-49ab-b2fb-c00d293d7ec2",
+                            Id = "a32ef57f-57cd-410f-9652-4c6e3e537e0d",
+                            ConcurrencyStamp = "b1f56739-fdac-438d-a12a-643d5d77bcd7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8645bd1f-7a53-42ba-a621-5763495ec5c3",
-                            ConcurrencyStamp = "52c73386-2d67-4885-9023-0c874f03bced",
+                            Id = "de03aa3a-bfd1-4ac6-be9f-b3ed251f2b2b",
+                            ConcurrencyStamp = "41cd43f0-10eb-4480-956c-814749c0241c",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "c01bce7a-1437-46fd-9dd0-c4536c92feda",
-                            ConcurrencyStamp = "bb0ad611-9a78-4a54-9239-e2d24681d833",
+                            Id = "452f64de-994a-47b1-96a7-3a59f7ad2f5c",
+                            ConcurrencyStamp = "0af68bdd-fc66-4fde-ac99-9b9ccda8679f",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });
@@ -471,9 +473,7 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasOne("DataAccessLayer.Entidades.Producto", null)
                         .WithMany("Precios")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductoId");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>

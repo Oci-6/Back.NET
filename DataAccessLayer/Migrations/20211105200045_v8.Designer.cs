@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211105200045_v8")]
+    partial class v8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,60 +81,6 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("EdificioId");
 
                     b.ToTable("Novedades");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entidades.Precio", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Fecha_Validez")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModificadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float>("Monto")
-                        .HasColumnType("real");
-
-                    b.Property<Guid>("ProductoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.ToTable("Precio");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entidades.Producto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CantMaxEdificios")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CantMaxSalones")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModificadoEn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Producto");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
@@ -313,29 +261,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "393cdd1d-f84f-42d3-9dca-250f65d095fa",
-                            ConcurrencyStamp = "c33b25cc-097b-4aeb-a286-c2f5d429cf61",
+                            Id = "6dcde40b-b834-4e9e-bfa1-f121507db512",
+                            ConcurrencyStamp = "aedb6027-224a-402b-b5ed-2e76f1b1b09d",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "f4184379-711b-4a59-8ff2-9075d3aab038",
-                            ConcurrencyStamp = "bd6b4d32-b038-49ab-b2fb-c00d293d7ec2",
+                            Id = "dd53a4f8-1f58-4f99-bbfb-d75f6bb80336",
+                            ConcurrencyStamp = "1d39f3a9-aeed-4c01-9d65-5642cb6abd2e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8645bd1f-7a53-42ba-a621-5763495ec5c3",
-                            ConcurrencyStamp = "52c73386-2d67-4885-9023-0c874f03bced",
+                            Id = "cd66ca2f-bee1-4387-b073-6fcf89a8bf58",
+                            ConcurrencyStamp = "b1614930-9178-4d52-9bab-9b19cb5d9f8a",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "c01bce7a-1437-46fd-9dd0-c4536c92feda",
-                            ConcurrencyStamp = "bb0ad611-9a78-4a54-9239-e2d24681d833",
+                            Id = "cac7e98b-6611-4f74-8fd8-6b16bf132ab4",
+                            ConcurrencyStamp = "ef182701-b3a9-4dda-a922-37fad6913301",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });
@@ -467,15 +415,6 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Edificio");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entidades.Precio", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entidades.Producto", null)
-                        .WithMany("Precios")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entidades.Puerta", b =>
                 {
                     b.HasOne("DataAccessLayer.Entidades.Edificio", "Edificio")
@@ -556,11 +495,6 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entidades.Producto", b =>
-                {
-                    b.Navigation("Precios");
                 });
 #pragma warning restore 612, 618
         }

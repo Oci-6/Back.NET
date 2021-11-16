@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entidades
 {
-    public class Puerta: BaseEntity
+    public class Novedad: BaseEntity
     {
-        public string Nombre { get;  set; }
+        public string Titulo { get; set; }
+
+        public string Contenido { get; set; }
+
+        public string Imagen { get; set; }
+
         public Guid EdificioId { get; set; }
+
         public Edificio Edificio { get; set; }
     }
 }

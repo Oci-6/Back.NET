@@ -39,20 +39,31 @@ namespace DataAccessLayer
         public DbSet<Edificio> Edificios { get; set; }
         public DbSet<Puerta> Puertas { get; set; }
         public DbSet<Salon> Salones { get; set; }
-
+        public DbSet<Novedad> Novedades { get; set; }
+        public DbSet<Precio> Precio { get; set; }
+        public DbSet<Producto> Producto { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreadoEn = DateTime.Now;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.ModificadoEn = DateTime.Now;
+                        break;
+                }
+            }
+
             foreach (var entry in ChangeTracker.Entries<TenantEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
                         entry.Entity.TenantInstitucion.Id = tenantId;
-                        entry.Entity.CreadoEn = DateTime.UtcNow;
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.ModificadoEn = DateTime.UtcNow;
                         break;
                 }
             }
@@ -62,6 +73,33 @@ namespace DataAccessLayer
 
 
 
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreadoEn = DateTime.Now;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.ModificadoEn = DateTime.Now;
+                        break;
+                }
+            }
+
+            foreach (var entry in ChangeTracker.Entries<TenantEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.TenantInstitucion.Id = tenantId;
+                        break;
+                }
+            }
+
+            return base.SaveChanges();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

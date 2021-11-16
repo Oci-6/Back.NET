@@ -4,14 +4,16 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20211112205951_prodid")]
+    partial class prodid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,8 +92,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("CreadoEn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Fecha_Validez")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Fecha_Validez")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModificadoEn")
                         .HasColumnType("datetime2");
@@ -313,29 +315,29 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "393cdd1d-f84f-42d3-9dca-250f65d095fa",
-                            ConcurrencyStamp = "c33b25cc-097b-4aeb-a286-c2f5d429cf61",
+                            Id = "ef4dbcbb-97b7-4bf8-9f60-57483b64b543",
+                            ConcurrencyStamp = "c2f51c08-3a1a-4ad4-bffb-3f418a2a07bd",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "f4184379-711b-4a59-8ff2-9075d3aab038",
-                            ConcurrencyStamp = "bd6b4d32-b038-49ab-b2fb-c00d293d7ec2",
+                            Id = "e8b70157-38b3-4ffd-aa9e-622bdc0dbee7",
+                            ConcurrencyStamp = "e761b725-dc19-4874-87b7-cf77030d1267",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8645bd1f-7a53-42ba-a621-5763495ec5c3",
-                            ConcurrencyStamp = "52c73386-2d67-4885-9023-0c874f03bced",
+                            Id = "bc3eb60d-0c3e-4472-9dff-b0780c6463b1",
+                            ConcurrencyStamp = "1e689221-baa9-411d-8f4f-b85a253f6901",
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
                         },
                         new
                         {
-                            Id = "c01bce7a-1437-46fd-9dd0-c4536c92feda",
-                            ConcurrencyStamp = "bb0ad611-9a78-4a54-9239-e2d24681d833",
+                            Id = "7a9d92f0-9bb3-4b15-9b36-51cf4065b6af",
+                            ConcurrencyStamp = "d3bee3b7-cfdc-41c8-a5a4-973cd425458e",
                             Name = "Portero",
                             NormalizedName = "PORTERO"
                         });

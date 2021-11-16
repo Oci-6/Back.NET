@@ -130,6 +130,7 @@ namespace WebAPI
             // Inyeccion de dependencias
 
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioProducto, DataAccessLayer.Repositorios.RepositorioProducto>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
             services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
@@ -138,6 +139,10 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Edificio, BusinessLayer.BL.BL_Edificio>();
             services.AddScoped<BusinessLayer.IBL_Puerta, BusinessLayer.BL.BL_Puerta>();
             services.AddScoped<BusinessLayer.IBL_Salon, BusinessLayer.BL.BL_Salon>();
+            services.AddScoped<BusinessLayer.IBL_Novedad, BusinessLayer.BL.BL_Novedad>();
+            services.AddScoped<BusinessLayer.IBL_Producto, BusinessLayer.BL.BL_Producto>();
+            services.AddScoped<BusinessLayer.IBL_Precio, BusinessLayer.BL.BL_Precio>();
+
 
 
 
@@ -154,6 +159,10 @@ namespace WebAPI
                 );
 
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
@@ -167,12 +176,18 @@ namespace WebAPI
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
             
             DbIncializador.SeedUsuarios(userManager);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.Run(async(context)=> {
+                await context.Response.WriteAsync("No se encontro nada");
             });
         }
     }
