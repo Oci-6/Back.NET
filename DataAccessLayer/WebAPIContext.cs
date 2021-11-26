@@ -47,6 +47,8 @@ namespace DataAccessLayer
         public DbSet<Precio> Precio { get; set; }
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Acceso> Accesos { get; set; }
+        public DbSet<Factura> Factura { get; set; }
+        public DbSet<Pago> Pago { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -82,7 +84,7 @@ namespace DataAccessLayer
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.TenantInstitucion.Id = tenantId;
+                        entry.Entity.TenantInstitucionId = tenantId;
                         break;
                 }
             }
@@ -134,7 +136,11 @@ namespace DataAccessLayer
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.TenantInstitucion.Id = tenantId;
+                        if(entry.Entity.TenantInstitucionId == Guid.Empty)
+                        {
+                            entry.Entity.TenantInstitucionId = tenantId;
+                        }
+                        
                         break;
                 }
             }

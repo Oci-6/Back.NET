@@ -22,10 +22,10 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/<PrecioController>
-        [HttpGet]
-        public ActionResult<IEnumerable<PrecioDto>> GetPrecios(Guid IdProducto)
+        [HttpGet("Producto/{idProducto}")]
+        public ActionResult<IEnumerable<PrecioDto>> GetPreciosProducto(Guid IdProducto)
         {
-            return Ok(ibl_Precio.GetPrecios(IdProducto));
+            return Ok(ibl_Precio.GetPreciosProducto(IdProducto));
         }
         
 

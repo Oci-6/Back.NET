@@ -10,7 +10,7 @@ namespace BusinessLayer
     public interface IBL_Precio
     {
         PrecioDto AddPrecio(AgregarPrecioDto x);
-        IEnumerable<PrecioDto> GetPrecios(Guid id);
+        IEnumerable<PrecioDto> GetPreciosProducto(Guid id);
         PrecioDto GetPrecio(Guid id);
         void PutPrecio(PrecioDto x, Guid id);
         void DeletePrecio(Guid id);

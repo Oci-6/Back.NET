@@ -11,5 +11,6 @@ namespace Shared.Dominio
         public Guid Id { get; set; }
         public string RazonSocial { get; set; }
         public string Rut { get; set; }
+        public Guid ProductoId { get; set; }
     }
 }

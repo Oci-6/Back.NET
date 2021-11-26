@@ -51,7 +51,7 @@ namespace BusinessLayer.BL
             return null;
         }
 
-        public IEnumerable<PrecioDto> GetPrecios(Guid IdProducto)
+        public IEnumerable<PrecioDto> GetPreciosProducto(Guid IdProducto)
         {
             return mapper.Map<IEnumerable<PrecioDto>>(repositorio.GetAll().Where(element => element.ProductoId == IdProducto));
         }

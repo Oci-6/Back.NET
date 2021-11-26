@@ -32,8 +32,8 @@ namespace DataAccessLayer.Repositorios
 
         public TenantInstitucion Get(Guid id)
         {
-            return entities.SingleOrDefault(s => s.Id == id);
-        }
+            return entities.Include(Institucion => Institucion.Producto.Precios).SingleOrDefault(s => s.Id == id);
+        } 
 
         public IEnumerable<TenantInstitucion> GetAll()
         {

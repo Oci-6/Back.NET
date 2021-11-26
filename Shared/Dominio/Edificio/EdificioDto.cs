@@ -12,9 +12,9 @@ namespace Shared.Dominio.Edificio
 
         public string Nombre { get; set; }
 
-        public string Latitud { get; set; }
+        public float Latitud { get; set; }
 
-        public string Longitud { get; set; }
+        public float Longitud { get; set; }
 
         public Guid TenantInstitucionId { get; set; }
 

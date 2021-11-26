@@ -17,17 +17,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
+using Quartz.Impl;
 using Shared;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebAPI.Tasks;
 
 namespace WebAPI
 {
     public class Startup
     {
+       
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -41,14 +46,14 @@ namespace WebAPI
 
             services.AddDbContext<WebAPIContext>((options => options
             .UseSqlServer(
-                Configuration.GetConnectionString("DbConnectionMauricio")
+                Configuration.GetConnectionString("DbConnection")
                 )
             ));
 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
+            services.AddSingleton(provider => GetScheduler().Result);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -143,8 +148,28 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Novedad, BusinessLayer.BL.BL_Novedad>();
             services.AddScoped<BusinessLayer.IBL_Producto, BusinessLayer.BL.BL_Producto>();
             services.AddScoped<BusinessLayer.IBL_Precio, BusinessLayer.BL.BL_Precio>();
+            services.AddScoped<BusinessLayer.IBL_Factura, BusinessLayer.BL.BL_Factura>();
+            services.AddScoped<BusinessLayer.IBL_Pago, BusinessLayer.BL.BL_Pago>();
 
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
 
+                // Create a "key" for the job
+                var jobKey = new JobKey("CrearFacturas");
+
+                // Register the job with the DI container
+                q.AddJob<CrearFacturas>(opts => opts.WithIdentity(jobKey));
+
+                // Create a trigger for the job
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("CrearFacturasTrigger")
+                    .WithCronSchedule("0 0 0 1 * ?")); //Cada primero de mes
+                    //.WithCronSchedule("0 * * * * ?")); Cada un minuto aprox
+
+            });
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 
         }
@@ -191,5 +216,52 @@ namespace WebAPI
                 await context.Response.WriteAsync("No se encontro nada");
             });
         }
+
+
+
+        private async Task<IScheduler> GetScheduler()
+        {
+            var properties = new NameValueCollection
+            {
+                { "quartz.scheduler.instanceName", "QuartzWithCore" },
+                { "quartz.scheduler.instanceId", "QuartzWithCore" },
+                { "quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+                { "quartz.jobStore.useProperties", "true" },
+                { "quartz.jobStore.dataSource", "default" },
+                { "quartz.jobStore.tablePrefix", "QRTZ_" },
+                {
+                    "quartz.dataSource.default.connectionString",
+                    "Server=dev\\SQLEXPRESS;Database=Tyson;Trusted_Connection=true;"
+                },
+                { "quartz.dataSource.default.provider", "SqlServer" },
+                { "quartz.threadPool.threadCount", "1" },
+                { "quartz.serializer.type", "json" },
+            };
+            var schedulerFactory = new StdSchedulerFactory(properties);
+            var scheduler = await schedulerFactory.GetScheduler();
+            await scheduler.Start();                                                                                  
+            return scheduler;
+        }
+
+        //public async Task<IActionResult> CrearFacturas()
+        //{
+        //    ITrigger trigger = TriggerBuilder.Create()
+        //     .WithIdentity($"CrearFacturas-{DateTime.Now}")
+        //     .StartAt(new DateTimeOffset(DateTime.Now.AddSeconds(15)))
+        //     .WithPriority(1)
+        //     .Build();
+
+        //    IDictionary<string, object> map = new Dictionary<string, object>()
+        //    {
+        //    };
+
+        //    IJobDetail job = JobBuilder.Create<CrearFacturas>()
+        //                .WithIdentity($"CrearFacturas:{DateTime.Now.Ticks}")
+        //                .SetJobData(new JobDataMap(map))
+        //                .Build();
+
+        //    await _scheduler.ScheduleJob(job, trigger);
+        //    return null;
+        //}
     }
 }
