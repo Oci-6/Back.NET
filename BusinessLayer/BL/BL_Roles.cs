@@ -2,7 +2,7 @@
 using DataAccessLayer.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace BusinessLayer.BL
             userManager = _userManager;
         }
 
-        public async Task<IdentityResult> AddRol(UsuarioDto x, string rol)
+        public async Task<IdentityResult> AddRol(UsuarioCreateDto x, string rol)
         {
             var identityResult = await userManager.AddToRoleAsync(await userManager.FindByEmailAsync(x.Email), rol);
 
@@ -44,7 +44,7 @@ namespace BusinessLayer.BL
         {
 
             var user = await userManager.GetUsersInRoleAsync(x);
-            var users = mapper.Map<IEnumerable<Shared.Dominio.UsuarioDto>>(user.Where(element => element.TenantInstitucionId == tenantId || tenantId == Guid.Empty));
+            var users = mapper.Map<IEnumerable<UsuarioDto>>(user.Where(element => element.TenantInstitucionId == tenantId || tenantId == Guid.Empty));
             return users;
         }
     }

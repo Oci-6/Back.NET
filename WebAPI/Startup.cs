@@ -76,6 +76,8 @@ namespace WebAPI
                         new string[] {}
                     }
                 });
+                c.OperationFilter<Extensiones.AddRequiredHeaderParameter>(); // Add this here
+
             });
 
             services.AddIdentityCore<DataAccessLayer.Entidades.Usuario>(
@@ -131,6 +133,7 @@ namespace WebAPI
 
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioProducto, DataAccessLayer.Repositorios.RepositorioProducto>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioEvento, DataAccessLayer.Repositorios.RepositorioEvento>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
             services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
@@ -143,6 +146,7 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Novedad, BusinessLayer.BL.BL_Novedad>();
             services.AddScoped<BusinessLayer.IBL_Producto, BusinessLayer.BL.BL_Producto>();
             services.AddScoped<BusinessLayer.IBL_Precio, BusinessLayer.BL.BL_Precio>();
+            services.AddScoped<BusinessLayer.IBL_Evento, BusinessLayer.BL.BL_Evento>();
 
 
 

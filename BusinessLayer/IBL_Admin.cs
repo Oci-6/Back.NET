@@ -9,7 +9,7 @@ namespace BusinessLayer
 {
     public interface IBL_Admin
     {
-        Task<IdentityResult> AddAdminAsync(Shared.Dominio.UsuarioDto x);
-        Task<IEnumerable<Shared.Dominio.UsuarioDto>> GetAdminsAsync();
+        Task<IdentityResult> AddAdminAsync(Shared.Dominio.Usuario.UsuarioDto x);
+        Task<IEnumerable<Shared.Dominio.Usuario.UsuarioDto>> GetAdminsAsync();
     }
 }

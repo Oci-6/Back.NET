@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Dominio
+namespace Shared.Dominio.Institucion
 {
-    public class InstitucionDto
+    public class InstitucionCreateDto
     {
-        public Guid Id { get; set; }
+        [Required]
         public string RazonSocial { get; set; }
+        [Required]
         public string Rut { get; set; }
     }
 }

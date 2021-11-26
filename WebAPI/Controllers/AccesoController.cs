@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using Shared.Dominio.Acceso;
 using SkyBiometry.Client.FC;
 using System;
@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<AccesoController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromHeader] Guid TenantId,[FromForm]AccesoCreateDto accesoDto)
+        public async Task<ActionResult> Post([FromForm]AccesoCreateDto accesoDto)
         {
             if (accesoDto.Foto != null)
             {

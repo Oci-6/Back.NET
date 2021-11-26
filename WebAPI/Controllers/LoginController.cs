@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Security.Claims;

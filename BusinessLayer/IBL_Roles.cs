@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using Microsoft.AspNetCore.Identity;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace BusinessLayer
 {
     public interface IBL_Roles 
     {
-        Task<IdentityResult> AddRol(UsuarioDto x, string rol);
+        Task<IdentityResult> AddRol(UsuarioCreateDto x, string rol);
         Task<IEnumerable<UsuarioDto>> GetUsuariosEnRol(string x);
 
     }

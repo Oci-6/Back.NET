@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
-using Shared.Dominio;
+using Shared.Dominio.Institucion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +21,14 @@ namespace BusinessLayer.BL
             repositorio = _repositorio;
         }
 
-        public InstitucionDto AddInstitucion(InstitucionDto x)
+        public InstitucionDto AddInstitucion(InstitucionCreateDto x)
         {
-            x.Id = new Guid();
             var institucion = mapper.Map<TenantInstitucion>(x);
 
+            institucion.Id = Guid.NewGuid();
             repositorio.Insert(institucion);
 
-            x.Id = institucion.Id;
-            return x;
+            return mapper.Map<InstitucionDto>(institucion);
         }
 
 
@@ -46,6 +45,11 @@ namespace BusinessLayer.BL
         public void PutInstitucion(InstitucionDto x, Guid id)
         {
             var institucion = repositorio.Get(id);
+
+            if (institucion == null)
+            {
+                throw new ArgumentNullException("Institucion null");
+            }
 
             institucion.RazonSocial = x.RazonSocial;
             institucion.Rut = x.Rut;

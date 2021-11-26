@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using Shared.Dominio.Acceso;
 using Shared.Dominio.Edificio;
+using Shared.Dominio.Evento;
+using Shared.Dominio.Institucion;
 using Shared.Dominio.Novedades;
 using Shared.Dominio.Precio;
 using Shared.Dominio.Producto;
@@ -21,7 +23,10 @@ namespace Shared
         public MapperDataTypes()
         {
             CreateMap<Usuario, UsuarioDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<TenantInstitucion, InstitucionDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<TenantInstitucion, InstitucionDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<InstitucionCreateDto, TenantInstitucion>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<Edificio, EdificioDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); 
             CreateMap<Puerta, PuertaDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); 
             CreateMap<Salon, SalonDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); 
@@ -35,7 +40,10 @@ namespace Shared
             CreateMap<Producto, ProductoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AgregarProductoDto, Producto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
+            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Evento, EventoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<EventoCreateDto, Evento>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
