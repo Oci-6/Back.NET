@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Dominio;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class GestorController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Roles roles;
@@ -23,14 +25,14 @@ namespace WebAPI.Controllers
         }
         // GET: api/<GestorController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuarioDto>>> Get([FromHeader] Guid TenantId)
+        public async Task<ActionResult<IEnumerable<UsuarioDto>>> Get()
         {
             return Ok(await roles.GetUsuariosEnRol("Gestor"));
         }
 
         // GET api/<GestorController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UsuarioDto>> Get([FromHeader] Guid TenantId,string id)
+        public async Task<ActionResult<UsuarioDto>> Get(string id)
         {
             var usuario = await usuarios.GetUsuarioAsync(id);
 
@@ -44,10 +46,9 @@ namespace WebAPI.Controllers
 
         // POST api/<GestorController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromHeader] Guid TenantId,[FromBody] UsuarioDto x)
+        public async Task<ActionResult> Post([FromBody] UsuarioCreateDto x)
         {
             var res = await usuarios.AddUsuarioAsync(x);
-
             if (res.Succeeded)
             {
                 var resRol = await roles.AddRol(x, "Gestor");
@@ -68,7 +69,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<GestorController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromHeader] Guid TenantId,string id, [FromBody] UsuarioDto x)
+        public async Task<ActionResult> Put(string id, [FromBody] UsuarioDto x)
         {
             var usuario = await usuarios.GetUsuarioAsync(id);
 
@@ -89,7 +90,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/<GestorController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromHeader] Guid TenantId,string id)
+        public async Task<ActionResult> Delete(string id)
         {
             var usuario = await usuarios.GetUsuarioAsync(id);
 

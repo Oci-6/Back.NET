@@ -2,7 +2,7 @@
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
 using Microsoft.AspNetCore.Identity;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,11 +30,11 @@ namespace BusinessLayer.BL
             return identityResult;
         }
 
-        public async Task<IEnumerable<Shared.Dominio.UsuarioDto>> GetAdminsAsync()
+        public async Task<IEnumerable<UsuarioDto>> GetAdminsAsync()
         {
            
             var admin = await userManager.GetUsersInRoleAsync("Admin");
-            var admins = mapper.Map<IEnumerable<Shared.Dominio.UsuarioDto>>(admin);
+            var admins = mapper.Map<IEnumerable<UsuarioDto>>(admin);
             return admins;
         }
       

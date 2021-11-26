@@ -8,11 +8,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SkyBiometry.Client.FC;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using OfficeOpenXml;
 using System.ComponentModel.DataAnnotations;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebAPI.Controllers
 {
@@ -31,9 +29,8 @@ namespace WebAPI.Controllers
 
         //POST: api/<PersonaController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromHeader] Guid TenantId, [FromForm] Shared.Dominio.Persona.PersonaCreateDto x)
+        public async Task<ActionResult> Post([FromForm] Shared.Dominio.Persona.PersonaCreateDto x)
         {
-            x.Id = Guid.NewGuid().ToString();
             x.Password = Guid.NewGuid().ToString();
             var res = await usuario.AddUsuarioAsync(x);
             if (res.Succeeded)
@@ -54,14 +51,12 @@ namespace WebAPI.Controllers
                         var result = await client.Faces.RecognizeAsync(userIds, new List<string>(), imagenes, "lab");
                         foreach (Photo foto in result.Photos)
                         {
-                            await client.Tags.SaveAsync(foto.Tags.Select(x => x.TagId).ToArray(), x.Id + "@lab");
+                            await client.Tags.SaveAsync(foto.Tags.Select(x => x.TagId).ToArray(), x.Email + "@lab");
 
                         }
-                        //var tags = new List<string>();
-                        //tags.Add("TEMP_F@0904f19a2e0791f56410a30300db0087_2e4caab58e7bd_43.80_40.54_0_1");
-                        //var result = await client.Tags.SaveAsync(tags, "chayanne@lab");
+
                         userIds = new List<string>();
-                        userIds.Add(x.Id + "@lab");
+                        userIds.Add(x.Email + "@lab");
                         result = await client.Faces.TrainAsync(userIds);
 
                         return Ok(result);
@@ -88,7 +83,7 @@ namespace WebAPI.Controllers
         [HttpPost("Importar")]
         public async Task<ActionResult> Import([FromHeader] Guid TenantId, [Required] IFormFile excel)
         {
-            var list = new List<UsuarioDto>();
+            var list = new List<UsuarioCreateDto>();
             using (var stream = new MemoryStream())
             {
                 await excel.CopyToAsync(stream);
@@ -98,8 +93,7 @@ namespace WebAPI.Controllers
                     var rowcount = worksheet.Dimension.Rows;
                     for (int row = 2; row <= rowcount; row++)
                     {
-                        var usuarioDto = new UsuarioDto();
-                        usuarioDto.Id = Guid.NewGuid().ToString();
+                        var usuarioDto = new UsuarioCreateDto();
                         usuarioDto.Email = worksheet.Cells[row, 1].Value.ToString();
                         usuarioDto.Password = Guid.NewGuid().ToString();
                         usuarioDto.Nombre = worksheet.Cells[row, 2].Value.ToString();
@@ -120,7 +114,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<PersonaController>
         [HttpGet]
-        public async Task<IEnumerable<Shared.Dominio.UsuarioDto>> GetAsync([FromHeader] Guid TenantId)
+        public async Task<IEnumerable<UsuarioDto>> GetAsync()
         {
             var users = await roles.GetUsuariosEnRol("Persona");
             return users;
@@ -128,7 +122,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<PersonaController>/Reconocer
         [HttpPost("Reconocer")]
-        public async Task<ActionResult> GetReconocimiento([FromHeader] Guid TenantId, [Required] IFormFile foto)
+        public async Task<ActionResult> GetReconocimiento([Required] IFormFile foto)
         {
             if (foto != null)
             {
@@ -149,7 +143,8 @@ namespace WebAPI.Controllers
                         {
                             return NotFound();
                         }
-                        var userId = match.UserId.Split('@').FirstOrDefault();
+                        var userId = match.UserId[..match.UserId.LastIndexOf('@')];
+
                         if (userId != null)
                         {
                             var user = await usuario.GetUsuarioAsync(userId);
@@ -172,7 +167,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<PersonaController>/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shared.Dominio.UsuarioDto>> GetAsync([FromHeader] Guid TenantId, string id)
+        public async Task<ActionResult<UsuarioDto>> GetAsync(string id)
         {
             var res = await usuario.GetUsuarioAsync(id);
             if (res == null)
@@ -186,7 +181,7 @@ namespace WebAPI.Controllers
 
         //PUT: api/<PersonaController>/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutAsync([FromHeader] Guid TenantId, [FromBody] Shared.Dominio.UsuarioDto x, string id)
+        public async Task<ActionResult> PutAsync([FromBody] UsuarioDto x, string id)
         {
             if ((await usuario.PutUsuarioAsync(x, id)).Succeeded)
             {

@@ -2,7 +2,7 @@
 using DataAccessLayer.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Shared.Dominio;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +34,10 @@ namespace BusinessLayer.BL
             userManager = _userManager;
         }
 
-        public async Task<IdentityResult> AddUsuarioAsync(Shared.Dominio.UsuarioDto x)
+        public async Task<IdentityResult> AddUsuarioAsync(UsuarioCreateDto x)
         {
             var user = mapper.Map<Usuario>(x);
+            user.Id = Guid.NewGuid().ToString();
             user.UserName = x.Email;
             user.TenantInstitucionId = tenantId != Guid.Empty ? tenantId : user.TenantInstitucionId;
             IdentityResult identityResult = await userManager.CreateAsync(user, x.Password);
@@ -49,7 +50,7 @@ namespace BusinessLayer.BL
             return await userManager.DeleteAsync(await userManager.FindByIdAsync(id));
         }
 
-        public async Task<Shared.Dominio.UsuarioDto> GetUsuarioAsync(string id)
+        public async Task<UsuarioDto> GetUsuarioAsync(string id)
         {
             var e = await userManager.FindByIdAsync(id);
             if (e.TenantInstitucionId != tenantId && tenantId != Guid.Empty)
@@ -57,25 +58,24 @@ namespace BusinessLayer.BL
                 return null;
             }
 
-            return mapper.Map<Shared.Dominio.UsuarioDto>(e);
+            return mapper.Map<UsuarioDto>(e);
 
         }
 
-        public IEnumerable<Shared.Dominio.UsuarioDto> GetUsuarios()
+        public IEnumerable<UsuarioDto> GetUsuarios()
         {
-
-            var usuarios = mapper.Map<IEnumerable<Shared.Dominio.UsuarioDto>>(userManager.Users.Where(element => element.TenantInstitucionId == tenantId || tenantId == Guid.Empty));
+            var usuarios = mapper.Map<IEnumerable<UsuarioDto>>(userManager.Users.Where(element => element.TenantInstitucionId == tenantId || tenantId == Guid.Empty));
             return usuarios;
         }
 
-        public async Task<IdentityResult> PutUsuarioAsync(Shared.Dominio.UsuarioDto x, string id)
+        public async Task<IdentityResult> PutUsuarioAsync(UsuarioDto x, string id)
         {
             var user = await userManager.FindByIdAsync(id);
 
             //user.Email = x.Email;
             //user.UserName = x.Email;
             //e.Nombre = x.Nombre
-            user = mapper.Map<Shared.Dominio.UsuarioDto, Usuario>(x, user);
+            user = mapper.Map<UsuarioDto, Usuario>(x, user);
 
 
             return await userManager.UpdateAsync(user);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<UsuarioController>
         [HttpGet]
-        public IEnumerable<Shared.Dominio.UsuarioDto> Get()
+        public IEnumerable<UsuarioDto> Get()
         {
             return _bl.GetUsuarios();
         }
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
         //POST: api/<UsuarioController>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Shared.Dominio.UsuarioDto x)
+        public async Task<ActionResult> Post([FromBody] UsuarioCreateDto x)
         {
             var res = await _bl.AddUsuarioAsync(x);
             if (res.Succeeded)

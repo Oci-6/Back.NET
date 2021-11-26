@@ -49,6 +49,7 @@ namespace DataAccessLayer
         public DbSet<Acceso> Accesos { get; set; }
         public DbSet<Factura> Factura { get; set; }
         public DbSet<Pago> Pago { get; set; }
+        public DbSet<Evento> Eventos { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -155,11 +156,11 @@ namespace DataAccessLayer
             modelBuilder.Entity<Usuario>().HasOne(e => e.TenantInstitucion).WithMany();
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Name = "SuperAdmin", NormalizedName = "SuperAdmin".ToUpper() },
-                new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() },
-                new IdentityRole { Name = "Gestor", NormalizedName = "Gestor".ToUpper() },
-                new IdentityRole { Name = "Portero", NormalizedName = "Portero".ToUpper() },
-                new IdentityRole { Name = "Persona", NormalizedName = "Persona".ToUpper() });
+                new IdentityRole { Id = "21e518a7-885a-4a77-bc7e-f1114b558db2", Name = "SuperAdmin", NormalizedName = "SuperAdmin".ToUpper(), ConcurrencyStamp = "61f97900-cbef-4bad-a9e9-577731359fec" },
+                new IdentityRole { Id = "a89ce39c-9185-41ef-90b8-87131ad9f76e", Name = "Admin", NormalizedName = "Admin".ToUpper(), ConcurrencyStamp = "682aa6c7-4c3b-488a-8010-a0f0fddeee2d" },
+                new IdentityRole { Id = "28dfc2ec-62ce-4f9f-a0cf-69f2d015f8e2", Name = "Gestor", NormalizedName = "Gestor".ToUpper(), ConcurrencyStamp = "c3603635-9123-45b0-9350-ba86e94d1f81" },
+                new IdentityRole { Id = "08d86449-a36f-4e9f-a5c6-b32fae607320", Name = "Portero", NormalizedName = "Portero".ToUpper(), ConcurrencyStamp = "2228e5bf-de4c-40a2-a113-3c069685cfca" },
+                new IdentityRole { Id = "01b59239-ff08-4997-b1a3-48d8a8509031", Name = "Persona", NormalizedName = "Persona".ToUpper(), ConcurrencyStamp = "dad4b8e3-868e-4f65-8012-7648226a1706" });
 
         }
     }

@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Shared.Dominio.Usuario;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin")]
     public class AdminController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Roles roles;
@@ -24,9 +25,8 @@ namespace WebAPI.Controllers
 
         //POST: api/<AdminController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Shared.Dominio.UsuarioDto x)
+        public async Task<ActionResult> Post([FromBody] UsuarioCreateDto x)
         {
-            x.Id = Guid.NewGuid().ToString();
             var res = await usuario.AddUsuarioAsync(x);
             if (res.Succeeded)
             {
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<AdminController>
         [HttpGet]
-        public async Task<IEnumerable<Shared.Dominio.UsuarioDto>> GetAsync()
+        public async Task<IEnumerable<UsuarioDto>> GetAsync()
         {
             var users = await roles.GetUsuariosEnRol("Admin");
             return users;
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
 
         //GET: api/<AdminController>/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shared.Dominio.UsuarioDto>> GetAsync(string id)
+        public async Task<ActionResult<UsuarioDto>> GetAsync(string id)
         {
             var res = await usuario.GetUsuarioAsync(id);
             if(res == null)
@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
 
         //PUT: api/<AdminController>/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutAsync([FromBody] Shared.Dominio.UsuarioDto x, string id)
+        public async Task<ActionResult> PutAsync([FromBody] UsuarioDto x, string id)
         {
             if((await usuario.PutUsuarioAsync(x,id)).Succeeded)
             {

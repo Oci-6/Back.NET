@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Dominio
+namespace Shared.Dominio.Usuario
 {
     public class UsuarioLogin
     {

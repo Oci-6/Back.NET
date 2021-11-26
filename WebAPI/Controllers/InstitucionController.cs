@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Dominio;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Dominio.Institucion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "SuperAdmin")]
+
     public class InstitucionController : ControllerBase
     {
 
@@ -22,6 +25,7 @@ namespace WebAPI.Controllers
         }
         // GET: api/<InstitucionController>
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<InstitucionDto> Get()
         {
             return bl.GetInstituciones();
@@ -29,6 +33,7 @@ namespace WebAPI.Controllers
 
         //GET api/<InstitucionController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<InstitucionDto> Get(Guid id)
         {
             var institucion = bl.GetInstitucion(id);
@@ -41,7 +46,7 @@ namespace WebAPI.Controllers
 
         // POST api/<InstitucionController>
         [HttpPost]
-        public ActionResult Post([FromBody] InstitucionDto x)
+        public ActionResult Post([FromBody] InstitucionCreateDto x)
         {
             return Ok(bl.AddInstitucion(x));
         }
@@ -50,30 +55,30 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult Put([FromBody] InstitucionDto x, Guid id)
         {
-            InstitucionDto institucion = bl.GetInstitucion(id);
-            if(institucion == null)
+            try
+            {
+                bl.PutInstitucion(x, id);
+                return NoContent();
+            }
+            catch
             {
                 return NotFound();
             }
-
-            bl.PutInstitucion(x,id);
-
-            return NoContent();
         }
 
         // DELETE api/<InstitucionController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
-            InstitucionDto institucion = bl.GetInstitucion(id);
-            if (institucion == null)
+            try
+            {
+                bl.DeleteInstitucion(id);
+                return NoContent();
+            }
+            catch
             {
                 return NotFound();
             }
-
-            bl.DeleteInstitucion(id);
-
-            return NoContent();
         }
     }
 }

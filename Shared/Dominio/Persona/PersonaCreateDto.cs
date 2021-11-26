@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Dominio.Persona
 {
-    public class PersonaCreateDto: UsuarioDto
+    public class PersonaCreateDto: Usuario.UsuarioCreateDto
     {
         [Display(Name = "Foto")]
         public IFormFile Foto { get; set; }
