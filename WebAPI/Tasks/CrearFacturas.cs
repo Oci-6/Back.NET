@@ -2,6 +2,7 @@
 using DataAccessLayer.Repositorios;
 using Quartz;
 using Shared.Dominio;
+using Shared.Dominio.Institucion;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

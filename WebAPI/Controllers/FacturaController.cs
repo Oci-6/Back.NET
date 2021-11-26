@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dominio;
 using Shared.Dominio.Factura;
+using Shared.Dominio.Institucion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
