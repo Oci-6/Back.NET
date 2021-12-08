@@ -26,6 +26,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebAPI.Extensiones;
 using WebAPI.Tasks;
 
 namespace WebAPI
@@ -50,11 +51,13 @@ namespace WebAPI
                 )
             ));
 
+            
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton(provider => GetScheduler().Result);
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NetCoreWebAPI", Version = "v1" });
@@ -139,6 +142,7 @@ namespace WebAPI
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioProducto, DataAccessLayer.Repositorios.RepositorioProducto>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioEvento, DataAccessLayer.Repositorios.RepositorioEvento>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioFactura, DataAccessLayer.Repositorios.RepositorioFactura>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
             services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
@@ -154,7 +158,7 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Factura, BusinessLayer.BL.BL_Factura>();
             services.AddScoped<BusinessLayer.IBL_Pago, BusinessLayer.BL.BL_Pago>();
             services.AddScoped<BusinessLayer.IBL_Evento, BusinessLayer.BL.BL_Evento>();
-
+            
             services.AddQuartz(q =>
             {
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
@@ -170,11 +174,12 @@ namespace WebAPI
                     .ForJob(jobKey)
                     .WithIdentity("CrearFacturasTrigger")
                     .WithCronSchedule("0 0 0 1 * ?")); //Cada primero de mes
-                    //.WithCronSchedule("0 * * * * ?")); Cada un minuto aprox
+                    //.WithCronSchedule("0 * * * * ?")); //Cada un minuto aprox
 
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
+            services.AddApiConfiguration(Configuration);
 
         }
 
@@ -195,8 +200,9 @@ namespace WebAPI
             }
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+                options => options.WithOrigins("http://localhost:4200", "https://www.sandbox.paypal.com/").AllowAnyMethod().AllowAnyHeader()
             );
+        
 
             app.UseHttpsRedirection();
 
@@ -247,25 +253,7 @@ namespace WebAPI
             return scheduler;
         }
 
-        //public async Task<IActionResult> CrearFacturas()
-        //{
-        //    ITrigger trigger = TriggerBuilder.Create()
-        //     .WithIdentity($"CrearFacturas-{DateTime.Now}")
-        //     .StartAt(new DateTimeOffset(DateTime.Now.AddSeconds(15)))
-        //     .WithPriority(1)
-        //     .Build();
+        
 
-        //    IDictionary<string, object> map = new Dictionary<string, object>()
-        //    {
-        //    };
-
-        //    IJobDetail job = JobBuilder.Create<CrearFacturas>()
-        //                .WithIdentity($"CrearFacturas:{DateTime.Now.Ticks}")
-        //                .SetJobData(new JobDataMap(map))
-        //                .Build();
-
-        //    await _scheduler.ScheduleJob(job, trigger);
-        //    return null;
-        //}
     }
 }

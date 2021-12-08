@@ -13,17 +13,21 @@ namespace BusinessLayer.BL
     public class BL_Pago : IBL_Pago
     {
         private readonly IRepositorio<Pago> repositorio;
+        private readonly IRepositorio<Factura> repositorioF;
         private readonly IMapper mapper;
 
-        public BL_Pago(IRepositorio<Pago> _repositorio, IMapper _mapper)
+        public BL_Pago(IRepositorio<Pago> _repositorio, IMapper _mapper, IRepositorio<Factura> _repositorioF)
         {
             repositorio = _repositorio;
+            repositorioF = _repositorioF;
             mapper = _mapper;
         }
         public PagoDto AddPago(AgregarPagoDto x)
         {
             var pago = mapper.Map<Pago>(x);
             pago.Id = Guid.NewGuid();
+            var factura = repositorioF.Get(x.FacturaId);
+            pago.Monto = factura.Importe;
 
             repositorio.Insert(pago);
 

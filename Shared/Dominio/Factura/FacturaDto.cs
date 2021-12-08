@@ -1,4 +1,5 @@
-﻿using Shared.Dominio.Precio;
+﻿using Shared.Dominio.Pago;
+using Shared.Dominio.Precio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace Shared.Dominio.Factura
         public DateTime Fecha_Vencimiento { get; set; }
 
         public string Descripcion { get; set; }
+
+        public PagoDto Pago { get; set; }
     }
 }

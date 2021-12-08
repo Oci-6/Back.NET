@@ -12,12 +12,12 @@ namespace BusinessLayer.BL
 {
     public class BL_Factura : IBL_Factura
     {
-        private readonly IRepositorio<Factura> repositorio;
+        private readonly IRepositorioFactura repositorio;
         private readonly IRepositorio<Precio> repositorio2;
         private readonly IRepositorioInstitucion repositorioI;
         private readonly IMapper mapper;
 
-        public BL_Factura(IRepositorio<Factura> _repositorio, IRepositorioInstitucion _repositorioI, IRepositorio<Precio> _repositorio2, IMapper _mapper)
+        public BL_Factura(IRepositorioFactura _repositorio, IRepositorioInstitucion _repositorioI, IRepositorio<Precio> _repositorio2, IMapper _mapper)
         {
             repositorio = _repositorio;
             repositorio2 =  _repositorio2;
@@ -29,8 +29,9 @@ namespace BusinessLayer.BL
         {
             
             var institucion = repositorioI.Get(tenantId);
-            var precio = institucion.Producto.Precios.OrderByDescending(x => x.Fecha_Validez).First();
-
+            var precios = institucion.Producto.Precios.Where(Precio => Precio.Fecha_Validez >= DateTime.Now).OrderBy(Precio => Precio.Fecha_Validez);
+            var precio = precios.ToList().First();
+            Console.WriteLine(precio);
             if (institucion.Producto == null)
             {
                 throw new Exception("La institucion no tiene un producto asociado");
@@ -64,7 +65,8 @@ namespace BusinessLayer.BL
 
         public IEnumerable<FacturaDto> GetFacturas()
         {
-            return mapper.Map<IEnumerable<FacturaDto>>(repositorio.GetAll());
+            var facturas = repositorio.GetAll();
+            return mapper.Map<IEnumerable<FacturaDto>>(facturas);
         }
 
         public void PutFactura(FacturaDto x, Guid id)

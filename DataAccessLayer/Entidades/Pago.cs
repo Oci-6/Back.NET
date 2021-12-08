@@ -12,8 +12,8 @@ namespace DataAccessLayer.Entidades
     {
         public float Monto { get; set; }
 
-        [Key, ForeignKey("Factura")]
         public Guid FacturaId { get; set; }
 
+        public Factura Factura { get; set; }
     }
 }

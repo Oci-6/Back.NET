@@ -10,13 +10,12 @@ namespace DataAccessLayer.Entidades
     {
         public DateTime Fecha_Vencimiento { get; set; }
 
-        public Guid? PagoId { get; set; }
-
-        public virtual Pago? Pago { get; set; }
+        public Pago? Pago { get; set; }
 
         public float Importe { get; set; }
 
         public string Descripcion { get; set; }
+
 
     }
 }
