@@ -12,10 +12,10 @@ namespace BusinessLayer.BL
 {
     public class BL_Puerta : IBL_Puerta
     {
-        private readonly IRepositorio<Puerta> repositorio;
+        private readonly IRepositorioPuerta repositorio;
         private readonly IMapper mapper;
 
-        public BL_Puerta(IRepositorio<Puerta> _repositorio, IMapper _mapper)
+        public BL_Puerta(IRepositorioPuerta _repositorio, IMapper _mapper)
         {
             repositorio = _repositorio;
             mapper = _mapper;
@@ -48,7 +48,7 @@ namespace BusinessLayer.BL
 
         public IEnumerable<PuertaDto> GetPuertas(Guid idEdificio)
         {
-            return mapper.Map<IEnumerable<PuertaDto>>(repositorio.GetAll().Where(element=>element.EdificioId==idEdificio));
+            return mapper.Map<IEnumerable<PuertaDto>>(repositorio.GetAll(idEdificio));
         }
 
         public void PutPuerta(PuertaDto x, Guid id)

@@ -24,7 +24,6 @@ namespace Shared.Dominio.Usuario
         public string Apellido { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
-        [Required]
         public Guid? TenantInstitucionId { get; set; }
     }
 }

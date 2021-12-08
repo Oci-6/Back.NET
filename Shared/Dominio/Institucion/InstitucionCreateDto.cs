@@ -13,5 +13,8 @@ namespace Shared.Dominio.Institucion
         public string RazonSocial { get; set; }
         [Required]
         public string Rut { get; set; }
+        [Required]
+        public Guid ProductoId { get; set; }
+
     }
 }

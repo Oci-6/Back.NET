@@ -21,6 +21,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<EventoController>
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<EventoDto>> Get()
         {
             return Ok(eventos.GetEventos());
@@ -28,6 +29,7 @@ namespace WebAPI.Controllers
 
         // GET api/<EventoController>/{id}
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult Get(Guid id)
         {
             var evento = eventos.GetEvento(id);
@@ -56,7 +58,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<EventoController>/{id}
         [HttpPut("{id}")]
-        public ActionResult Put(Guid id, [FromBody] EventoDto x)
+        public ActionResult Put(Guid id, [FromBody] EventoCreateDto x)
         {
             if (eventos.GetEvento(id) == null)
             {

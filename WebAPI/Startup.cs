@@ -46,7 +46,7 @@ namespace WebAPI
 
             services.AddDbContext<WebAPIContext>((options => options
             .UseSqlServer(
-                Configuration.GetConnectionString("DbConnection")
+                Configuration.GetConnectionString("DbConnectionMauricio")
                 )
             ));
 
@@ -137,8 +137,13 @@ namespace WebAPI
             // Inyeccion de dependencias
 
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioInstitucion, DataAccessLayer.Repositorios.RepositorioInstitucion>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioPersona, DataAccessLayer.Repositorios.RepositorioPersona>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioProducto, DataAccessLayer.Repositorios.RepositorioProducto>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioEvento, DataAccessLayer.Repositorios.RepositorioEvento>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioAcceso, DataAccessLayer.Repositorios.RepositorioAcceso>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioNovedad, DataAccessLayer.Repositorios.RepositorioNovedad>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioAsignacion, DataAccessLayer.Repositorios.RepositorioAsignacion>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioPuerta, DataAccessLayer.Repositorios.RepositorioPuerta>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
             services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
@@ -154,6 +159,8 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Factura, BusinessLayer.BL.BL_Factura>();
             services.AddScoped<BusinessLayer.IBL_Pago, BusinessLayer.BL.BL_Pago>();
             services.AddScoped<BusinessLayer.IBL_Evento, BusinessLayer.BL.BL_Evento>();
+            services.AddScoped<BusinessLayer.IBL_Persona, BusinessLayer.BL.BL_Persona>();
+            services.AddScoped<BusinessLayer.IBL_AsignacionPuerta, BusinessLayer.BL.BL_AsignacionPuerta>();
 
             services.AddQuartz(q =>
             {

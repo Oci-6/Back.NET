@@ -10,7 +10,7 @@ namespace DataAccessLayer.Entidades
     {
         public Guid EdificioId { get; set; }
         public Edificio Edificio { get; set; }
-        public string UsuarioId { get; set; }
-        public Usuario Usuario { get; set; }
+        public Guid PersonaId { get; set; }
+        public Persona Persona { get; set; }
     }
 }

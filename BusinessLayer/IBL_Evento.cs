@@ -12,7 +12,7 @@ namespace BusinessLayer
         EventoDto AddEvento(EventoCreateDto x);
         IEnumerable<EventoDto> GetEventos();
         EventoDto GetEvento(Guid id);
-        void PutEvento(EventoDto x, Guid id);
+        void PutEvento(EventoCreateDto x, Guid id);
         void DeleteEvento(Guid id);
     }
 }
