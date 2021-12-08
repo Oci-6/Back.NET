@@ -11,6 +11,7 @@ using SkyBiometry.Client.FC;
 using Shared.Dominio.Usuario;
 using OfficeOpenXml;
 using System.ComponentModel.DataAnnotations;
+using Shared.Dominio.Persona;
 
 namespace WebAPI.Controllers
 {
@@ -19,9 +20,9 @@ namespace WebAPI.Controllers
     public class PersonaController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Roles roles;
-        private readonly BusinessLayer.IBL_Usuario usuario;
+        private readonly BusinessLayer.IBL_Persona usuario;
 
-        public PersonaController(BusinessLayer.IBL_Roles roles, BusinessLayer.IBL_Usuario usuario)
+        public PersonaController(BusinessLayer.IBL_Roles roles, BusinessLayer.IBL_Persona usuario)
         {
             this.roles = roles;
             this.usuario = usuario;
@@ -29,61 +30,25 @@ namespace WebAPI.Controllers
 
         //POST: api/<PersonaController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] Shared.Dominio.Persona.PersonaCreateDto x)
+        public async Task<ActionResult> Crear([FromForm] Shared.Dominio.Persona.PersonaCreateDto x)
         {
-            x.Password = Guid.NewGuid().ToString();
-            var res = await usuario.AddUsuarioAsync(x);
-            if (res.Succeeded)
+
+            try
             {
-                var resRol = await roles.AddRol(x, "Persona");
-                if (resRol.Succeeded)
-                {
-                    if (x.Foto != null)
-                    {
-
-                        var imagenes = new List<Stream>();
-                        var userIds = new List<string>();
-                        var urls = new List<string>();
-                        imagenes.Add(x.Foto.OpenReadStream());
-                        userIds.Add("all");
-
-                        var client = new FCClient("uhu60o2e1q4v5dogdue0s8nb1f", "tq7en8fnmibqgvshsgfv929i4h");
-                        var result = await client.Faces.RecognizeAsync(userIds, new List<string>(), imagenes, "lab");
-                        foreach (Photo foto in result.Photos)
-                        {
-                            await client.Tags.SaveAsync(foto.Tags.Select(x => x.TagId).ToArray(), x.Email + "@lab");
-
-                        }
-
-                        userIds = new List<string>();
-                        userIds.Add(x.Email + "@lab");
-                        result = await client.Faces.TrainAsync(userIds);
-
-                        return Ok(result);
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(await usuario.AddPersonaAsync(x));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-
 
         }
 
-        //POST: api/<PersonaController>
+        //POST: api/<PersonaController>/Importar
         [HttpPost("Importar")]
-        public async Task<ActionResult> Import([FromHeader] Guid TenantId, [Required] IFormFile excel)
+        public async Task<ActionResult> Import([Required] IFormFile excel)
         {
-            var list = new List<UsuarioCreateDto>();
+            var list = new List<PersonaCreateDto>();
             using (var stream = new MemoryStream())
             {
                 await excel.CopyToAsync(stream);
@@ -93,17 +58,14 @@ namespace WebAPI.Controllers
                     var rowcount = worksheet.Dimension.Rows;
                     for (int row = 2; row <= rowcount; row++)
                     {
-                        var usuarioDto = new UsuarioCreateDto();
+                        var usuarioDto = new PersonaCreateDto();
                         usuarioDto.Email = worksheet.Cells[row, 1].Value.ToString();
-                        usuarioDto.Password = Guid.NewGuid().ToString();
                         usuarioDto.Nombre = worksheet.Cells[row, 2].Value.ToString();
                         usuarioDto.Apellido = worksheet.Cells[row, 3].Value.ToString();
                         usuarioDto.TipoDocumento = worksheet.Cells[row, 4].Value.ToString();
                         usuarioDto.Documento = worksheet.Cells[row, 5].Value.ToString();
-                        usuarioDto.PhoneNumber = worksheet.Cells[row, 6].Value.ToString();
-                        usuarioDto.TenantInstitucionId = TenantId;
-                        await usuario.AddUsuarioAsync(usuarioDto);
-                        await roles.AddRol(usuarioDto, "Persona");
+                        usuarioDto.Telefono = worksheet.Cells[row, 6].Value.ToString();
+                        await usuario.AddPersonaAsync(usuarioDto);
                         list.Add(usuarioDto);
                     }
                 }
@@ -114,62 +76,61 @@ namespace WebAPI.Controllers
 
         //GET: api/<PersonaController>
         [HttpGet]
-        public async Task<IEnumerable<UsuarioDto>> GetAsync()
+        public  IEnumerable<PersonaDto> Get()
         {
-            var users = await roles.GetUsuariosEnRol("Persona");
-            return users;
+            return usuario.GetPersonas();
         }
 
-        //GET: api/<PersonaController>/Reconocer
-        [HttpPost("Reconocer")]
-        public async Task<ActionResult> GetReconocimiento([Required] IFormFile foto)
-        {
-            if (foto != null)
-            {
-                var imagenes = new List<Stream>();
-                var userIds = new List<string>();
-                imagenes.Add(foto.OpenReadStream());
-                userIds.Add("all");
-                var client = new FCClient("uhu60o2e1q4v5dogdue0s8nb1f", "tq7en8fnmibqgvshsgfv929i4h");
-                var result = await client.Faces.RecognizeAsync(userIds, new List<string>(), imagenes, "lab");
+        ////POST: api/<PersonaController>/Reconocer
+        //[HttpPost("Reconocer")]
+        //public async Task<ActionResult> GetReconocimiento([Required] IFormFile foto)
+        //{
+        //    if (foto != null)
+        //    {
+        //        var imagenes = new List<Stream>();
+        //        var userIds = new List<string>();
+        //        imagenes.Add(foto.OpenReadStream());
+        //        userIds.Add("all");
+        //        var client = new FCClient("uhu60o2e1q4v5dogdue0s8nb1f", "tq7en8fnmibqgvshsgfv929i4h");
+        //        var result = await client.Faces.RecognizeAsync(userIds, new List<string>(), imagenes, "lab");
 
-                var personas = new List<UsuarioDto>();
-                foreach (Photo fotoResult in result.Photos)
-                {
-                    foreach (Tag tag in fotoResult.Tags)
-                    {
-                        var match = tag.Matches.FirstOrDefault(m => m.Confidence >= 75);
-                        if (match == null)
-                        {
-                            return NotFound();
-                        }
-                        var userId = match.UserId[..match.UserId.LastIndexOf('@')];
+        //        var personas = new List<UsuarioDto>();
+        //        foreach (Photo fotoResult in result.Photos)
+        //        {
+        //            foreach (Tag tag in fotoResult.Tags)
+        //            {
+        //                var match = tag.Matches.FirstOrDefault(m => m.Confidence >= 75);
+        //                if (match == null)
+        //                {
+        //                    return NotFound();
+        //                }
+        //                var userId = match.UserId[..match.UserId.LastIndexOf('@')];
 
-                        if (userId != null)
-                        {
-                            var user = await usuario.GetUsuarioAsync(userId);
-                            if (user == null)
-                            {
-                                return NotFound();
-                            }
-                            return Ok(user);
-                        }
-                    }
-                }
+        //                if (userId != null)
+        //                {
+        //                    var user = await usuario.GetUsuarioAsync(userId);
+        //                    if (user == null)
+        //                    {
+        //                        return NotFound();
+        //                    }
+        //                    return Ok(user);
+        //                }
+        //            }
+        //        }
 
-                return NotFound();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         //GET: api/<PersonaController>/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<UsuarioDto>> GetAsync(string id)
+        public ActionResult<UsuarioDto> Get(Guid id)
         {
-            var res = await usuario.GetUsuarioAsync(id);
+            var res = usuario.GetPersona(id);
             if (res == null)
             {
                 return NotFound();
@@ -179,25 +140,45 @@ namespace WebAPI.Controllers
 
         }
 
+        //GET: api/<PersonaController>/Buscar
+        [HttpGet("Buscar")]
+        public async Task<ActionResult<UsuarioDto>> BuscarPersonas([FromQuery] string query,int page = 1)
+        {
+            var res = await usuario.GetPersonasAsync(query, page, 10);
+
+            return Ok(res);
+
+        }
+
         //PUT: api/<PersonaController>/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutAsync([FromBody] UsuarioDto x, string id)
+        public ActionResult Put([FromBody] PersonaCreateDto x, Guid id)
         {
-            if ((await usuario.PutUsuarioAsync(x, id)).Succeeded)
+            try
             {
+                usuario.PutPersona(x, id);
                 return NoContent();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         //DELETE: api/<PersonaController>/{id}
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync([FromHeader] Guid TenantId, string id)
+        public ActionResult Delete(Guid id)
         {
-            if ((await usuario.DeleteUsuarioAsync(id)).Succeeded)
+            try
             {
-                return Ok();
+                usuario.DeletePersona(id);
+                return NoContent();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+
     }
 }

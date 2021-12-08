@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entidades
 {
-    public class Puerta: BaseEntity
+    public class AsignacionPuerta: BaseEntity
     {
-        public string Nombre { get;  set; }
-        public Guid EdificioId { get; set; }
-        public Edificio Edificio { get; set; }
+        public Guid PuertaId { get; set; }
+        public Puerta Puerta { get; set; }
         public string UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
+        public Usuario Usuario { get; set; }
     }
 }

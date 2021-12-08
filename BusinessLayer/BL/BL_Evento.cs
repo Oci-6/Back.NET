@@ -50,14 +50,16 @@ namespace BusinessLayer.BL
             return mapper.Map<IEnumerable<EventoDto>>(repositorio.GetAll());
         }
 
-        public void PutEvento(EventoDto x, Guid id)
+        public void PutEvento(EventoCreateDto x, Guid id)
         {
             var evento = repositorio.Get(id);
-            evento.Nombre = x.Nombre;
-            evento.FechaInicio = x.FechaInicio;
-            evento.FechaFin = evento.FechaFin;
-            evento.Semanalmente = evento.Semanalmente;
-            evento.Mensualmente = evento.Mensualmente;
+            //evento.Nombre = x.Nombre;
+            //evento.FechaInicio = x.FechaInicio;
+            //evento.FechaFin = evento.FechaFin;
+            //evento.Semanalmente = evento.Semanalmente;
+            //evento.Mensualmente = evento.Mensualmente;
+            mapper.Map<EventoCreateDto,Evento >(x, evento);
+
             repositorio.Update(evento);
         }
     }

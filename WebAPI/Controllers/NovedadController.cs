@@ -28,9 +28,16 @@ namespace WebAPI.Controllers
 
         // GET: api/<PuertaController>
         [HttpGet("Edificio/{IdEdificio}")]
-        public ActionResult<IEnumerable<NovedadDto>> GetPuertasEdificio(Guid IdEdificio)
+        public ActionResult<IEnumerable<NovedadDto>> GetNovedadesEdificio(Guid IdEdificio)
         {
             return Ok(ibl_Novedad.GetNovedades(IdEdificio));
+        }
+
+        // GET: api/<PuertaController>
+        [HttpGet("Ultimas")]
+        public ActionResult<IEnumerable<NovedadDto>> GetUltimas([FromHeader] Guid tenantId)
+        {
+            return Ok(ibl_Novedad.GetUltimas(tenantId));
         }
 
         // GET api/<NovedadController>/5

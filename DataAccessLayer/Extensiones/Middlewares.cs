@@ -17,7 +17,7 @@ namespace DataAccessLayer.Extensiones
             {
                 if (evento.SalonId == nuevo.SalonId)
                 {
-                    if (evento.HoraInicio >= nuevo.HoraInicio && evento.HoraFin >= nuevo.HoraInicio && evento.HoraInicio <= nuevo.HoraFin && evento.HoraFin <= nuevo.HoraFin)
+                    if (evento.FechaInicio.TimeOfDay >= nuevo.FechaInicio.TimeOfDay && evento.FechaFin.TimeOfDay >= nuevo.FechaInicio.TimeOfDay && evento.FechaInicio.TimeOfDay <= nuevo.FechaFin.TimeOfDay && evento.FechaFin.TimeOfDay <= nuevo.FechaFin.TimeOfDay)
                     {
                         if ((evento.FechaInicio.Date >= nuevo.FechaInicio.Date && evento.FechaFin.Date >= nuevo.FechaInicio.Date && evento.FechaInicio.Date <= nuevo.FechaFin.Date && evento.FechaFin.Date <= nuevo.FechaFin.Date)||( evento.Semanalmente && nuevo.Semanalmente))
                         {

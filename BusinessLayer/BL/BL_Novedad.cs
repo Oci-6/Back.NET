@@ -12,10 +12,10 @@ namespace BusinessLayer.BL
 {
     public class BL_Novedad : IBL_Novedad
     {
-        private readonly IRepositorio<Novedad> repositorio;
+        private readonly IRepositorioNovedad repositorio;
         private readonly IMapper mapper;
 
-        public BL_Novedad(IRepositorio<Novedad> _repositorio, IMapper _mapper)
+        public BL_Novedad(IRepositorioNovedad _repositorio, IMapper _mapper)
         {
             repositorio = _repositorio;
             mapper = _mapper;
@@ -48,7 +48,12 @@ namespace BusinessLayer.BL
 
         public IEnumerable<NovedadDto> GetNovedades(Guid idEdificio)
         {
-            return mapper.Map<IEnumerable<NovedadDto>>(repositorio.GetAll().Where(element => element.EdificioId == idEdificio));
+            return mapper.Map<IEnumerable<NovedadDto>>(repositorio.GetAll(idEdificio));
+        }
+
+        public IEnumerable<NovedadDto> GetUltimas(Guid tenantId)
+        {
+            return mapper.Map<IEnumerable<NovedadDto>>(repositorio.GetUltimas(tenantId));
         }
 
         public void PutNovedad(NovedadDto x, Guid id)

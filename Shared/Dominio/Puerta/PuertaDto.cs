@@ -1,4 +1,5 @@
 ﻿using Shared.Dominio.Edificio;
+using Shared.Dominio.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Shared.Dominio.Puerta
         public Guid EdificioId { get; set; }
 
         public EdificioDto Edificio { get; set; }
+        public Guid UsuarioId { get; set; }
+        public UsuarioDto Usuario { get; set; }
 
     }
 }

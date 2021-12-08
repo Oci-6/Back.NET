@@ -39,7 +39,6 @@ namespace DataAccessLayer
         }
 
         public DbSet<TenantInstitucion> Tenants { get; set; }
-
         public DbSet<Edificio> Edificios { get; set; }
         public DbSet<Puerta> Puertas { get; set; }
         public DbSet<Salon> Salones { get; set; }
@@ -50,6 +49,8 @@ namespace DataAccessLayer
         public DbSet<Factura> Factura { get; set; }
         public DbSet<Pago> Pago { get; set; }
         public DbSet<Evento> Eventos { get; set; }
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<AsignacionPuerta> AsignacionPuertas  { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -137,11 +138,11 @@ namespace DataAccessLayer
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        if(entry.Entity.TenantInstitucionId == Guid.Empty)
+                        if (entry.Entity.TenantInstitucionId == Guid.Empty)
                         {
                             entry.Entity.TenantInstitucionId = tenantId;
                         }
-                        
+
                         break;
                 }
             }
@@ -161,6 +162,12 @@ namespace DataAccessLayer
                 new IdentityRole { Id = "28dfc2ec-62ce-4f9f-a0cf-69f2d015f8e2", Name = "Gestor", NormalizedName = "Gestor".ToUpper(), ConcurrencyStamp = "c3603635-9123-45b0-9350-ba86e94d1f81" },
                 new IdentityRole { Id = "08d86449-a36f-4e9f-a5c6-b32fae607320", Name = "Portero", NormalizedName = "Portero".ToUpper(), ConcurrencyStamp = "2228e5bf-de4c-40a2-a113-3c069685cfca" },
                 new IdentityRole { Id = "01b59239-ff08-4997-b1a3-48d8a8509031", Name = "Persona", NormalizedName = "Persona".ToUpper(), ConcurrencyStamp = "dad4b8e3-868e-4f65-8012-7648226a1706" });
+
+
+            modelBuilder.Entity<Acceso>()
+            .HasOne(e => e.Persona)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict); // <--
 
         }
     }

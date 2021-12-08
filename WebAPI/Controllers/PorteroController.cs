@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize( Roles = "Gestor")]
+    [Authorize( Roles = "Gestor, Admin")]
     public class PorteroController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Roles roles;

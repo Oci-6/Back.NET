@@ -17,6 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.Dominio.Persona;
+using DataAccessLayer.Extensiones;
+using Shared.Dominio;
+using Shared.Dominio.AsignacionPuerta;
 
 namespace Shared
 {
@@ -24,7 +28,8 @@ namespace Shared
     {
         public MapperDataTypes()
         {
-            CreateMap<Usuario, UsuarioDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Usuario, UsuarioDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UsuarioCreateDto, Usuario>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<TenantInstitucion, InstitucionDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<InstitucionCreateDto, TenantInstitucion>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -47,11 +52,19 @@ namespace Shared
             CreateMap<Pago, PagoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AgregarPagoDto, Pago>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
-            CreateMap<Acceso, AccesoDto>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Acceso, AccesoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
+            CreateMap<AccesoCreateDto, Acceso>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Evento, EventoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<EventoCreateDto, Evento>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Persona, PersonaDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<PersonaCreateDto, Persona>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap(typeof(PaginatedList<>), typeof(PaginatedListDto<>));
+
+            CreateMap<AsignacionPuerta, AsignacionPuertaDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<AsignacionPuertaCreateDto, AsignacionPuerta>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

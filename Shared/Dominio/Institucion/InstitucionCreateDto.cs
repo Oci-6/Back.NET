@@ -15,5 +15,6 @@ namespace Shared.Dominio.Institucion
         public string Rut { get; set; }
         [Required]
         public Guid ProductoId { get; set; }
+
     }
 }

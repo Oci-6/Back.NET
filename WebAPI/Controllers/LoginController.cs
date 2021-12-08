@@ -46,7 +46,8 @@ namespace WebAPI.Controllers
                 var key = Encoding.ASCII.GetBytes(secretKey);
 
                 var claims = new ClaimsIdentity();
-                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Email));
+                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id));
+                claims.AddClaim(new Claim(ClaimTypes.Email, usuario.Email));
                 roles.ToList().ForEach(i => claims.AddClaim(new Claim(ClaimTypes.Role, i)));
 
                 var tokenDescriptor = new SecurityTokenDescriptor()

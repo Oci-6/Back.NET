@@ -9,7 +9,13 @@ namespace BusinessLayer
 {
     public interface IBL_Acceso
     {
-        AccesoDto AddAcceso(AccesoDto x);
-        IEnumerable<AccesoDto> GetAccesos(Guid idEdificio);
+        AccesoDto AddAcceso(AccesoCreateDto x);
+        AccesoDto Get(Guid id);
+        IEnumerable<AccesoDto> GetAllEdificio(Guid idEdificio);
+        IEnumerable<AccesoDto> GetAll();
+        AccesoDto PutAcceso(AccesoCreateDto x, Guid id);
+        void DeleteAcceso(Guid id);
+        Task<AccesoDto> ReconocerAsync(AccesoReconocimientoDto x);
+
     }
 }
