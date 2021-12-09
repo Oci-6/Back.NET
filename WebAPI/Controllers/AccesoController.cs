@@ -9,11 +9,13 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin, Gestor, Portero")]
     public class AccesoController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Acceso acceso;
@@ -50,12 +52,14 @@ namespace WebAPI.Controllers
 
         //POST: api/<AccesoController>
         [HttpPost]
+        [Authorize(Roles = "Portero")]
         public ActionResult Post([FromBody] AccesoCreateDto x)
         {
             return Ok(acceso.AddAcceso(x));
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Portero")]
         public ActionResult Put([FromBody]AccesoCreateDto x, [Required] Guid id)
         {
             try
@@ -69,6 +73,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Portero")]
         public ActionResult Delete([Required] Guid id)
         {
             try
@@ -84,51 +89,15 @@ namespace WebAPI.Controllers
 
         //POST: api/<AccesoController>/Reconocer
         [HttpPost("Reconocer")]
+        [Authorize(Roles = "Portero")]
         public async Task<ActionResult> ReconocerAsync([FromForm] AccesoReconocimientoDto accesoDto)
         {
-            //if (accesoDto.Foto != null)
-            //{
-            //    var imagenes = new List<Stream>();
-            //    var userIds = new List<string>();
-            //    imagenes.Add(accesoDto.Foto.OpenReadStream());
-            //    userIds.Add("all");
-            //    var client = new FCClient("uhu60o2e1q4v5dogdue0s8nb1f", "tq7en8fnmibqgvshsgfv929i4h");
-            //    var result = await client.Faces.RecognizeAsync(userIds, new List<string>(), imagenes, "lab");
-
-            //    var personas = new List<UsuarioDto>();
-            //    foreach (Photo fotoResult in result.Photos)
-            //    {
-            //        foreach (Tag tag in fotoResult.Tags)
-            //        {
-            //            var match = tag.Matches.FirstOrDefault(m => m.Confidence >= 75);
-            //            if (match == null)
-            //            {
-            //                return NotFound();
-            //            }
-            //            var userId = match.UserId.Split('@').FirstOrDefault();
-            //            if (userId != null)
-            //            {
-            //                var res = acceso.AddAcceso(new AccesoDto()
-            //                {
-            //                    EdificioId = accesoDto.EdificioId,
-            //                    UsuarioId = userId
-            //                });
-            //                return Ok(res);
-            //            }
-            //        }
-            //    }
-
-            //    return NotFound();
-            //}
-            //else
-            //{
             var acceso = await this.acceso.ReconocerAsync(accesoDto);
             if (acceso == null)
             {
                 return NotFound();
             }
             return Ok(acceso);
-            //}
         }
 
        

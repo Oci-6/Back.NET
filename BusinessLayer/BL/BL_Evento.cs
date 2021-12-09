@@ -24,7 +24,6 @@ namespace BusinessLayer.BL
         {
             var evento = mapper.Map<Evento>(x);
             evento.Id = Guid.NewGuid();
-
             repositorio.Insert(evento);
 
             return mapper.Map<EventoDto>(evento);

@@ -65,13 +65,27 @@ namespace WebAPI.Controllers
                         usuarioDto.TipoDocumento = worksheet.Cells[row, 4].Value.ToString();
                         usuarioDto.Documento = worksheet.Cells[row, 5].Value.ToString();
                         usuarioDto.Telefono = worksheet.Cells[row, 6].Value.ToString();
-                        await usuario.AddPersonaAsync(usuarioDto);
-                        list.Add(usuarioDto);
+                        try
+                        {
+                            await usuario.AddPersonaAsync(usuarioDto);
+                            list.Add(usuarioDto);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
                     }
                 }
             }
+            if (list.Count > 0)
+            {
+                return Ok(list);
 
-            return Ok(list);
+            }
+            else
+            {
+                return BadRequest("Personas ya existentes");
+            }
         }
 
         //GET: api/<PersonaController>

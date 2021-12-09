@@ -10,6 +10,7 @@ namespace Shared.Dominio.Usuario
     {
         public UsuarioDto Usuario { get; set; }
         public string Token { get; set; }
+        public DateTime Expira { get; set; }
         public IEnumerable<string> Roles { get; set; }
     }
 }

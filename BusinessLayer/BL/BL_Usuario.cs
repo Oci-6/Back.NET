@@ -89,5 +89,19 @@ namespace BusinessLayer.BL
             return await userManager.GetRolesAsync(usuario);
         }
 
+        public async Task<UsuarioDto> Login(UsuarioLogin x)
+        {
+            var user = await userManager.FindByEmailAsync(x.Email);
+            if (user == null)
+                return null;
+
+            // check if password is correct
+            if (!await userManager.CheckPasswordAsync(user, x.Password))
+                return null;
+
+            // authentication successful
+            return mapper.Map<UsuarioDto>(user);
+            
+        }
     }
 }

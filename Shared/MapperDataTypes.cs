@@ -56,7 +56,7 @@ namespace Shared
             CreateMap<AccesoCreateDto, Acceso>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Evento, EventoDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<EventoCreateDto, Evento>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<EventoCreateDto, Evento>().ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.FechaInicio.ToLocalTime())).ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.FechaFin.ToLocalTime())).ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Persona, PersonaDto>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<PersonaCreateDto, Persona>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
