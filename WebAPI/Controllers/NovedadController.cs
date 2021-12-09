@@ -85,19 +85,6 @@ namespace WebAPI.Controllers
             return Ok(ibl_Novedad.AddNovedad(x));
         }
 
-        // PUT api/<NovedadController>/5
-        [HttpPut("{id}")]
-        public ActionResult Put(Guid id, [FromBody] NovedadDto x)
-        {
-            var novedad = ibl_Novedad.GetNovedad(id);
-            if (novedad == null)
-            {
-                return NotFound();
-            }
-            ibl_Novedad.PutNovedad(x, id);
-            return NoContent();
-        }
-
         // DELETE api/<NovedadController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
@@ -110,5 +97,34 @@ namespace WebAPI.Controllers
             ibl_Novedad.DeleteNovedad(id);
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public ActionResult Put([FromForm] AgregarNovedadDto x, Guid id)
+        {
+            try
+            {
+                if (x.ImagenFile.Length > 0)
+                {
+                    if (!Directory.Exists(environment.WebRootPath + "\\Upload\\"))
+                    {
+                        Directory.CreateDirectory(environment.WebRootPath + "\\Upload\\");
+                    }
+                    x.Imagen = "\\Upload\\" + Guid.NewGuid() + Path.GetExtension(x.ImagenFile.FileName);
+                    using (FileStream fileStream = System.IO.File.Create(environment.WebRootPath + x.Imagen))
+                    {
+                        x.ImagenFile.CopyTo(fileStream);
+                        fileStream.Flush();
+                    }
+                }
+                ibl_Novedad.PutNovedad(x, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message.ToString());
+            }
+            
+        }
+
     }
 }

@@ -47,7 +47,7 @@ namespace WebAPI
 
             services.AddDbContext<WebAPIContext>((options => options
             .UseSqlServer(
-                Configuration.GetConnectionString("DbConnectionMauricio")
+                Configuration.GetConnectionString("DbConnection")
                 )
             ));
 
@@ -221,7 +221,15 @@ namespace WebAPI
 
             app.UseStaticFiles();
 
-            
+            app.UseWhen(
+                context => context.Request.Path.StartsWithSegments("/api/Pago/success"),
+                appBuilder =>
+                {
+                    appBuilder.UseMiddleware<MiddlewareHeader>();
+                }
+            );
+
+
             DbIncializador.SeedUsuarios(userManager);
 
             app.UseEndpoints(endpoints =>
@@ -259,7 +267,7 @@ namespace WebAPI
             await scheduler.Start();                                                                                  
             return scheduler;
         }
-
+        
         
 
     }

@@ -21,7 +21,7 @@ namespace DataAccessLayer.Repositorios
 
         public new Factura Get(Guid id)
         {
-            return entities.Include(Factura => Factura.Pago).SingleOrDefault(s => s.Id == id);
+            return entities.Include(Factura => Factura.Pago).Include(Factura => Factura.TenantInstitucion).SingleOrDefault(s => s.Id == id);
         }
 
         public new IEnumerable<Factura> GetAll()

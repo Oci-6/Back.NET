@@ -56,14 +56,20 @@ namespace BusinessLayer.BL
             return mapper.Map<IEnumerable<NovedadDto>>(repositorio.GetUltimas(tenantId));
         }
 
-        public void PutNovedad(NovedadDto x, Guid id)
+        public void PutNovedad(AgregarNovedadDto x, Guid id)
         {
+            
             var novedad = repositorio.Get(id);
+            if (novedad == null)
+            {
+                throw new Exception("No existe novedad con ese id");
+            }
             novedad.Titulo = x.Titulo;
             novedad.Contenido = x.Contenido;
+            novedad.Imagen = x.Imagen??novedad.Imagen;
             
 
-            repositorio.Update(novedad);
+           repositorio.Update(novedad);
         }
     }
 }

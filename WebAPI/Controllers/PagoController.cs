@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using PayPal.Api;
@@ -20,12 +21,16 @@ namespace WebAPI.Controllers
         private readonly IBL_Pago ibl_Pago;
         private readonly IBL_Factura ibl_Factura;
         private readonly PayPalSetting Configuration;
+        private readonly IHttpContextAccessor contextAccessor;
 
-        public PagoController(IBL_Pago _pago, IOptions<PayPalSetting> Configuration, IBL_Factura _factura)
+        public PagoController(IBL_Pago _pago, IOptions<PayPalSetting> Configuration, IBL_Factura _factura, IHttpContextAccessor _contextAccessor)
         {
             ibl_Pago = _pago;
             ibl_Factura = _factura;
             this.Configuration = Configuration.Value;
+            this.contextAccessor = _contextAccessor;
+
+
         }
 
         // GET: api/<PagoController>
@@ -82,7 +87,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("Pagar/{IdFactura}")]
-        public void Pago(Guid IdFactura)
+        public ActionResult Pago(Guid IdFactura)
         {
             var config = new Dictionary<string, string>();
             config.Add("mode", "sandbox");
@@ -135,7 +140,8 @@ namespace WebAPI.Controllers
             {
                 description = "Pago de mensualidad",
                 amount = amount,
-                item_list = itemList
+                item_list = itemList,
+                custom = factura.Id.ToString() + "," + factura.TenantInstitucionId.ToString()
             });
 
             var payment = new Payment()
@@ -149,15 +155,17 @@ namespace WebAPI.Controllers
             var createPayment = payment.Create(apiContext);
 
             var links = createPayment.links.GetEnumerator();
-
+            var res = "";
             while (links.MoveNext())
             {
                 var link = links.Current;
                 if (link.rel.ToLower().Trim().Equals("approval_url"))
                 {
-                    Response.Redirect(link.href);
+                    res = link.href;
                 }
             }
+            return Ok(new { message = res });
+
         }
 
 
@@ -176,8 +184,30 @@ namespace WebAPI.Controllers
             var payment = new Payment() { id = paymentId };
 
             var executePayment = payment.Execute(apiContext, paymentExecution);
-
+            if(executePayment.state == "approved")
+            {
+                var ids = executePayment.transactions.Where(t => t.custom != null).FirstOrDefault().custom.Split(",");
+                contextAccessor.HttpContext?.Request.Headers.Add("TenantId", ids[1]);
+                ibl_Pago.AddPago(new AgregarPagoDto() { FacturaId = Guid.Parse(ids[0]) });
+            }
             return Ok(executePayment);
+        }
+
+        [HttpGet("cancel")]
+        public dynamic Cancel(string paymentId, string PayerId, string token)
+        {
+            var config = new Dictionary<string, string>();
+            config.Add("mode", "sandbox");
+            config.Add("clientId", Configuration.ClientID);
+            config.Add("clientSecret", Configuration.Secret);
+
+            var accessToken = new OAuthTokenCredential(config).GetAccessToken();
+            var apiContext = new APIContext(accessToken);
+
+            var paymentExecution = new PaymentExecution() { payer_id = PayerId };
+            var payment = new Payment() { id = paymentId };
+
+            return Ok(payment);
         }
     }
 }

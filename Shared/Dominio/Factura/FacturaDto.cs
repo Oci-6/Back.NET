@@ -1,4 +1,5 @@
-﻿using Shared.Dominio.Pago;
+﻿using Shared.Dominio.Institucion;
+using Shared.Dominio.Pago;
 using Shared.Dominio.Precio;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,9 @@ namespace Shared.Dominio.Factura
         public string Descripcion { get; set; }
 
         public PagoDto Pago { get; set; }
+
+        public Guid TenantInstitucionId { get; set; }
+
+        public InstitucionDto TenantInstitucion { get; set; }
     }
 }

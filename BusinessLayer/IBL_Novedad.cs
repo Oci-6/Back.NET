@@ -13,7 +13,7 @@ namespace BusinessLayer
         IEnumerable<NovedadDto> GetNovedades(Guid id);
         IEnumerable<NovedadDto> GetUltimas(Guid tenantId);
         NovedadDto GetNovedad(Guid id);
-        void PutNovedad(NovedadDto x, Guid id);
+        void PutNovedad(AgregarNovedadDto x, Guid id);
         void DeleteNovedad(Guid id);
     }
 }
