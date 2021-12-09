@@ -17,6 +17,7 @@ namespace BusinessLayer
         Task<IdentityResult> PutUsuarioAsync(UsuarioDto x, string id);
         Task<IdentityResult> DeleteUsuarioAsync(string id);
         Task<IEnumerable<String>> GetRolesUsuarioAsync(string id);
+        Task<UsuarioDto> Login(UsuarioLogin x);
 
     }
 }

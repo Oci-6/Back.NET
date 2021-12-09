@@ -21,7 +21,7 @@ namespace DataAccessLayer.Repositorios
 
         new public AsignacionPuerta Get(Guid id)
         {
-            return entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Id == id).OrderByDescending(ap => ap.CreadoEn).SingleOrDefault();
+            return entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Id == id).SingleOrDefault();
         }
         public AsignacionPuerta GetActual(string idPortero)
         {
@@ -30,7 +30,7 @@ namespace DataAccessLayer.Repositorios
 
         public IEnumerable<AsignacionPuerta> GetAll(Guid idEdificio)
         {
-            return entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Puerta.EdificioId == idEdificio).AsEnumerable();
+            return entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Puerta.EdificioId == idEdificio).OrderByDescending(ap => ap.CreadoEn).AsEnumerable();
         }
     }
 }

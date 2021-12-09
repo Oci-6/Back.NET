@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Portero")]
+    [Authorize(Roles = "Admin, Gestor, Portero")]
     public class AsignacionPuertaController : ControllerBase
     {
         private readonly IBL_AsignacionPuerta asignacionPuerta;
@@ -46,7 +46,8 @@ namespace WebAPI.Controllers
         }
 
         // GET api/<AsignacionPuertaController>/5
-        [HttpGet()]
+        [HttpGet]
+        [Authorize(Roles = "Portero")]
         public ActionResult GetActual()
         {
             var res = asignacionPuerta.GetActual();
@@ -61,6 +62,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<AsignacionPuertaController>
         [HttpPut]
+        [Authorize(Roles = "Portero")]
         public ActionResult DesAsignar()
         {
             try
@@ -75,6 +77,7 @@ namespace WebAPI.Controllers
         }
         // POST api/<AsignacionPuertaController>
         [HttpPost]
+        [Authorize(Roles = "Portero")]
         public ActionResult Post([FromBody] AsignacionPuertaCreateDto x)
         {
             try
@@ -91,6 +94,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<AsignacionPuertaController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Portero")]
         public ActionResult Put(Guid id, [FromBody] AsignacionPuertaCreateDto x)
         {
             try
@@ -105,6 +109,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/<AsignacionPuertaController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Portero")]
         public ActionResult Delete(Guid id)
         {
             try

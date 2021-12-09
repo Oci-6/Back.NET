@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entidades
 {
+    [Index(nameof(Email), IsUnique = true)]
+
     public class Persona : TenantEntity
     {
         public string Email { get; set; }
