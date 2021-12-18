@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dominio.Puerta;
 using System;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PuertaController : ControllerBase
     {
         private readonly IBL_Puerta ibl_Puerta;
@@ -23,6 +25,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<PuertaController>
         [HttpGet("Edificio/{IdEdificio}")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<PuertaDto>> GetPuertasEdificio(Guid IdEdificio)
         {
             return Ok(ibl_Puerta.GetPuertas(IdEdificio));
@@ -30,6 +33,7 @@ namespace WebAPI.Controllers
 
         // GET api/<PuertaController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<PuertaDto> Get(Guid id)
         {
             var puerta = ibl_Puerta.GetPuerta(id);
@@ -43,6 +47,7 @@ namespace WebAPI.Controllers
 
         // POST api/<PuertaController>
         [HttpPost]
+        [Authorize(Roles = "Admin, Gestor")]
         public ActionResult Post([FromBody] PuertaDto x)
         {
             return Ok(ibl_Puerta.AddPuerta(x));
@@ -50,6 +55,8 @@ namespace WebAPI.Controllers
 
         // PUT api/<PuertaController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Gestor")]
+
         public ActionResult Put(Guid id, [FromBody] PuertaDto x)
         {
             var puerta = ibl_Puerta.GetPuerta(id);
@@ -63,6 +70,8 @@ namespace WebAPI.Controllers
 
         // DELETE api/<PuertaController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Gestor")]
+
         public ActionResult Delete(Guid id)
         {
             var puerta = ibl_Puerta.GetPuerta(id);

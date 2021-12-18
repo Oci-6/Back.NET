@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dominio.Precio;
 using System;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PrecioController : ControllerBase
     {
         private readonly IBL_Precio ibl_Precio;
@@ -44,6 +46,8 @@ namespace WebAPI.Controllers
 
         // POST api/<PrecioController>
         [HttpPost]
+        [Authorize(Roles ="SuperAdmin")]
+
         public ActionResult Post([FromBody] AgregarPrecioDto x)
         {
             return Ok(ibl_Precio.AddPrecio(x));
@@ -51,6 +55,8 @@ namespace WebAPI.Controllers
 
         // PUT api/<PrecioController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Put(Guid id, [FromBody] PrecioDto x)
         {
             var precio = ibl_Precio.GetPrecio(id);
@@ -64,6 +70,8 @@ namespace WebAPI.Controllers
 
         // DELETE api/<PrecioController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Delete(Guid id)
         {
             var precio = ibl_Precio.GetPrecio(id);

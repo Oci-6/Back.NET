@@ -44,9 +44,9 @@ namespace BusinessLayer.BL
             return null;
         }
 
-        public IEnumerable<EventoDto> GetEventos()
+        public IEnumerable<EventoDto> GetEventos(Guid salonId)
         {
-            return mapper.Map<IEnumerable<EventoDto>>(repositorio.GetAll());
+            return mapper.Map<IEnumerable<EventoDto>>(repositorio.GetAll(salonId));
         }
 
         public void PutEvento(EventoCreateDto x, Guid id)

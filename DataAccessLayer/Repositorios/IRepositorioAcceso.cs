@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entidades;
+using DataAccessLayer.Extensiones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace DataAccessLayer.Repositorios
         IEnumerable<Acceso> GetAllEdificio(Guid idEdificio);
         new IEnumerable<Acceso> GetAll();
         new Acceso Get(Guid id);
+        Task<PaginatedList<Acceso>> GetPaginatedList(Guid id, int page, int skip);
+
     }
 
 }

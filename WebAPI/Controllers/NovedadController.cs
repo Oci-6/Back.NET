@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin, Gestor")]
     public class NovedadController : ControllerBase
     {
         private readonly IBL_Novedad ibl_Novedad;
@@ -28,6 +30,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<PuertaController>
         [HttpGet("Edificio/{IdEdificio}")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<NovedadDto>> GetNovedadesEdificio(Guid IdEdificio)
         {
             return Ok(ibl_Novedad.GetNovedades(IdEdificio));
@@ -35,6 +38,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<PuertaController>
         [HttpGet("Ultimas")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<NovedadDto>> GetUltimas([FromHeader] Guid tenantId)
         {
             return Ok(ibl_Novedad.GetUltimas(tenantId));
@@ -42,6 +46,7 @@ namespace WebAPI.Controllers
 
         // GET api/<NovedadController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<NovedadDto> Get(Guid id)
         {
             var novedad = ibl_Novedad.GetNovedad(id);

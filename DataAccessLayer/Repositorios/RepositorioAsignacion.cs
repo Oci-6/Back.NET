@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entidades;
+using DataAccessLayer.Extensiones;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,10 @@ namespace DataAccessLayer.Repositorios
         public IEnumerable<AsignacionPuerta> GetAll(Guid idEdificio)
         {
             return entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Puerta.EdificioId == idEdificio).OrderByDescending(ap => ap.CreadoEn).AsEnumerable();
+        }
+        public async Task<PaginatedList<AsignacionPuerta>> GetPaginatedList(Guid idEdificio, int page, int skip)
+        {
+            return await PaginatedList<AsignacionPuerta>.CreateAsync(entities.Include(ap => ap.Puerta).Include(ap => ap.Usuario).Where(ap => ap.Puerta.EdificioId == idEdificio).OrderByDescending(ap => ap.CreadoEn).AsQueryable(), page, skip);
         }
     }
 }

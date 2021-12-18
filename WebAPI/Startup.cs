@@ -33,7 +33,7 @@ namespace WebAPI
 {
     public class Startup
     {
-       
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -47,11 +47,11 @@ namespace WebAPI
 
             services.AddDbContext<WebAPIContext>((options => options
             .UseSqlServer(
-                Configuration.GetConnectionString("DbConnection")
+                Configuration.GetConnectionString("DbConnectionMauricio")
                 )
             ));
 
-            
+
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -148,6 +148,7 @@ namespace WebAPI
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioNovedad, DataAccessLayer.Repositorios.RepositorioNovedad>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioAsignacion, DataAccessLayer.Repositorios.RepositorioAsignacion>();
             services.AddScoped<DataAccessLayer.Repositorios.IRepositorioPuerta, DataAccessLayer.Repositorios.RepositorioPuerta>();
+            services.AddScoped<DataAccessLayer.Repositorios.IRepositorioSalon, DataAccessLayer.Repositorios.RepositorioSalon>();
             services.AddScoped(typeof(DataAccessLayer.Repositorios.IRepositorio<>), typeof(DataAccessLayer.Repositorios.Repositorio<>));
 
             services.AddScoped<BusinessLayer.IBL_Roles, BusinessLayer.BL.BL_Roles>();
@@ -165,6 +166,7 @@ namespace WebAPI
             services.AddScoped<BusinessLayer.IBL_Evento, BusinessLayer.BL.BL_Evento>();
             services.AddScoped<BusinessLayer.IBL_Persona, BusinessLayer.BL.BL_Persona>();
             services.AddScoped<BusinessLayer.IBL_AsignacionPuerta, BusinessLayer.BL.BL_AsignacionPuerta>();
+            services.AddScoped<BusinessLayer.IBL_Emails, BusinessLayer.BL.BL_Emails>();
 
             services.AddQuartz(q =>
             {
@@ -180,8 +182,8 @@ namespace WebAPI
                 q.AddTrigger(opts => opts
                     .ForJob(jobKey)
                     .WithIdentity("CrearFacturasTrigger")
-                    .WithCronSchedule("0 0 0 1 * ?")); //Cada primero de mes
-                    //.WithCronSchedule("0 * * * * ?")); //Cada un minuto aprox
+                                                       .WithCronSchedule("0 0 0 1 * ?")); //Cada primero de mes
+                                                                                          //.WithCronSchedule("0 * * * * ?")); //Cada un minuto aprox
 
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
@@ -209,7 +211,7 @@ namespace WebAPI
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200", "https://www.sandbox.paypal.com/").AllowAnyMethod().AllowAnyHeader()
             );
-        
+
 
             app.UseHttpsRedirection();
 
@@ -222,7 +224,10 @@ namespace WebAPI
             app.UseStaticFiles();
 
             app.UseWhen(
-                context => context.Request.Path.StartsWithSegments("/api/Pago/success"),
+                context => !context.Request.Path.StartsWithSegments("/api/Login") && (context.Request.Method.Contains("POST") || context.Request.Method.Contains("PUT") || context.Request.Method.Contains("DELETE")) || (
+                (context.Request.Path.StartsWithSegments("/api/Acceso") || context.Request.Path.StartsWithSegments("/api/AsignacionPuerta") || context.Request.Path.StartsWithSegments("/api/Factura") || (context.Request.Path.StartsWithSegments("/api/Pago")&&!context.Request.Path.StartsWithSegments("/api/Pago/Paypal")) || context.Request.Path.StartsWithSegments("/api/Gestor") || context.Request.Path.StartsWithSegments("/api/Portero") || context.Request.Path.StartsWithSegments("/api/Persona")) &&
+                context.Request.Method.Contains("GET"))
+                ,
                 appBuilder =>
                 {
                     appBuilder.UseMiddleware<MiddlewareHeader>();
@@ -237,7 +242,8 @@ namespace WebAPI
                 endpoints.MapControllers();
             });
 
-            app.Run(async(context)=> {
+            app.Run(async (context) =>
+            {
                 await context.Response.WriteAsync("No se encontro nada");
             });
         }
@@ -264,11 +270,11 @@ namespace WebAPI
             };
             var schedulerFactory = new StdSchedulerFactory(properties);
             var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.Start();                                                                                  
+            await scheduler.Start();
             return scheduler;
         }
-        
-        
+
+
 
     }
 }

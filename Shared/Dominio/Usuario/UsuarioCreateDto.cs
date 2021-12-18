@@ -17,12 +17,16 @@ namespace Shared.Dominio.Usuario
         [Required]
         public string TipoDocumento { get; set; }
         [Required]
+        [StringLength(12, MinimumLength = 8, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
+
         public string Documento { get; set; }
         [Required]
         public string Nombre { get; set; }
         [Required]
         public string Apellido { get; set; }
         [Required]
+        [RegularExpression("[- +()0-9]+")]
+
         public string PhoneNumber { get; set; }
         public Guid? TenantInstitucionId { get; set; }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Shared.Dominio.Salon;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin, Gestor")]
     public class SalonController : ControllerBase
     {
         private readonly IBL_Salon ibl_Salon;
@@ -23,6 +25,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<SalonController>
         [HttpGet("Edificio/{IdEdificio}")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<SalonDto>> GetSalonesEdificio(Guid IdEdificio)
         {
             return Ok(ibl_Salon.GetSalones(IdEdificio));
@@ -30,6 +33,7 @@ namespace WebAPI.Controllers
 
         // GET api/<SalonController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<SalonDto> Get(Guid id)
         {
             var salon = ibl_Salon.GetSalon(id);
@@ -43,9 +47,16 @@ namespace WebAPI.Controllers
 
         // POST api/<SalonController>
         [HttpPost]
-        public ActionResult Post([FromBody] SalonDto x)
+        public ActionResult Post([FromBody] SalonCreateDto x)
         {
-            return Ok(ibl_Salon.AddSalon(x));
+            try
+            {
+                return Ok(ibl_Salon.AddSalon(x));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // PUT api/<SalonController>/5

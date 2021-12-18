@@ -32,5 +32,10 @@ namespace DataAccessLayer.Repositorios
             db.SaveChanges();
         }
 
+        public IEnumerable<Evento> GetAll(Guid salonId)
+        {
+            return entities.Where(e => e.SalonId == salonId).AsEnumerable();
+        }
+
     }
 }

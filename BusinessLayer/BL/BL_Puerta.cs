@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
+using Microsoft.AspNetCore.Http;
 using Shared.Dominio.Puerta;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,19 @@ namespace BusinessLayer.BL
         {
             repositorio = _repositorio;
             mapper = _mapper;
+            
         }
 
         public PuertaDto AddPuerta(PuertaDto x)
         {
             x.Id = Guid.NewGuid();
             var puerta = mapper.Map<Puerta>(x);
+            puerta.UsuarioId = null;
 
             repositorio.Insert(puerta);
 
             return x;
+
         }
 
         public void DeletePuerta(Guid id)

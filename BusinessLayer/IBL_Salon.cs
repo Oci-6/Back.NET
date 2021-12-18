@@ -9,7 +9,7 @@ namespace BusinessLayer
 {
     public interface IBL_Salon
     {
-        SalonDto AddSalon(SalonDto x);
+        SalonDto AddSalon(SalonCreateDto x);
         IEnumerable<SalonDto> GetSalones(Guid id);
         SalonDto GetSalon(Guid id);
         void PutSalon(SalonDto x, Guid id);

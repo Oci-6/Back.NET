@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.Dominio;
 using Shared.Dominio.Acceso;
 
 namespace BusinessLayer
@@ -11,7 +12,7 @@ namespace BusinessLayer
     {
         AccesoDto AddAcceso(AccesoCreateDto x);
         AccesoDto Get(Guid id);
-        IEnumerable<AccesoDto> GetAllEdificio(Guid idEdificio);
+        Task<PaginatedListDto<AccesoDto>> GetAllEdificioAsync(Guid idEdificio, int page, int skip);
         IEnumerable<AccesoDto> GetAll();
         AccesoDto PutAcceso(AccesoCreateDto x, Guid id);
         void DeleteAcceso(Guid id);

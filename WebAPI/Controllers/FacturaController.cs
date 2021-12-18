@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dominio;
 using Shared.Dominio.Factura;
@@ -14,6 +15,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class FacturaController : ControllerBase
     {
         private readonly IBL_Factura bL_Factura;
@@ -27,6 +29,7 @@ namespace WebAPI.Controllers
 
         // GET: api/<FacturaController>
         [HttpGet]
+
         public ActionResult<IEnumerable<FacturaDto>> Get()
         {
             return Ok(bL_Factura.GetFacturas());
@@ -47,6 +50,7 @@ namespace WebAPI.Controllers
 
         // POST api/<FacturaController>
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Post([FromHeader] Guid tenantId)
         {
             return Ok(bL_Factura.AddFactura(tenantId));
@@ -54,6 +58,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<FacturaController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Put(Guid id, [FromBody] FacturaDto x)
         {
             var factura = bL_Factura.GetFactura(id);
@@ -67,6 +72,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/<FacturaController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Delete(Guid id)
         {
             var factura = bL_Factura.GetFactura(id);
@@ -78,7 +84,9 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("fasfafa")]
+        [HttpGet("CrearFacturas")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult CrearFacturas()
         {
             try

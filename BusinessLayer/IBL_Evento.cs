@@ -10,7 +10,7 @@ namespace BusinessLayer
     public interface IBL_Evento
     {
         EventoDto AddEvento(EventoCreateDto x);
-        IEnumerable<EventoDto> GetEventos();
+        IEnumerable<EventoDto> GetEventos(Guid salonId);
         EventoDto GetEvento(Guid id);
         void PutEvento(EventoCreateDto x, Guid id);
         void DeleteEvento(Guid id);

@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositorios
 {
-    public interface IRepositorioEvento: IRepositorio<Evento>
+    public interface IRepositorioSalon: IRepositorio<Salon>
     {
-        new void Insert(Evento entity);
-        IEnumerable<Evento> GetAll(Guid salonId);
+        IEnumerable<Salon> GetAllInstitucion();
     }
 }

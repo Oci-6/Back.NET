@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entidades;
+using DataAccessLayer.Extensiones;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,5 +35,11 @@ namespace DataAccessLayer.Repositorios
             return entities.Include(Acceso => Acceso.Persona).AsEnumerable();
         }
 
+        public async Task<PaginatedList<Acceso>> GetPaginatedList(Guid id, int page, int skip)
+        {
+            return await PaginatedList<Acceso>.CreateAsync(entities.Include(a => a.Persona).Where(ap => ap.EdificioId == id).OrderByDescending(ap => ap.CreadoEn).AsQueryable(), page, skip);
+        }
+
+  
     }
 }

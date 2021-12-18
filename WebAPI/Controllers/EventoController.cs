@@ -20,11 +20,11 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/<EventoController>
-        [HttpGet]
+        [HttpGet("Salon/{salonId}")]
         [AllowAnonymous]
-        public ActionResult<IEnumerable<EventoDto>> Get()
+        public ActionResult<IEnumerable<EventoDto>> GetAll(Guid salonId)
         {
-            return Ok(eventos.GetEventos());
+            return Ok(eventos.GetEventos(salonId));
         }
 
         // GET api/<EventoController>/{id}

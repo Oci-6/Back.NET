@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entidades
 {
-    public class Factura: TenantEntity
+    public class Factura : BaseEntity
     {
         public DateTime Fecha_Vencimiento { get; set; }
 
@@ -15,6 +15,8 @@ namespace DataAccessLayer.Entidades
         public float Importe { get; set; }
 
         public string Descripcion { get; set; }
+        public Guid TenantInstitucionId { get; set; }
+        public TenantInstitucion TenantInstitucion { get; set; }
 
 
     }

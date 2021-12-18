@@ -12,11 +12,13 @@ using Shared.Dominio.Usuario;
 using OfficeOpenXml;
 using System.ComponentModel.DataAnnotations;
 using Shared.Dominio.Persona;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PersonaController : ControllerBase
     {
         private readonly BusinessLayer.IBL_Roles roles;
@@ -156,9 +158,9 @@ namespace WebAPI.Controllers
 
         //GET: api/<PersonaController>/Buscar
         [HttpGet("Buscar")]
-        public async Task<ActionResult<UsuarioDto>> BuscarPersonas([FromQuery] string query,int page = 1)
+        public async Task<ActionResult<UsuarioDto>> BuscarPersonas([FromQuery] string query,int page = 1, int take = 10)
         {
-            var res = await usuario.GetPersonasAsync(query, page, 10);
+            var res = await usuario.GetPersonasAsync(query, page, take);
 
             return Ok(res);
 

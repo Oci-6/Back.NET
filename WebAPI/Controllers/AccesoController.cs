@@ -45,9 +45,9 @@ namespace WebAPI.Controllers
 
         //GET: api/<AccesoController>/Edificio/{idEdificio}
         [HttpGet("Edificio/{idEdificio}")]
-        public ActionResult GetEdificios([Required] Guid idEdificio)
+        public async Task<ActionResult> GetEdificiosAsync([Required] Guid idEdificio, [FromQuery] int page = 1, int skip = 10)
         {
-            return Ok(acceso.GetAllEdificio(idEdificio));
+            return Ok(await acceso.GetAllEdificioAsync(idEdificio, page, skip));
         }
 
         //POST: api/<AccesoController>

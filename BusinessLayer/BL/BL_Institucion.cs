@@ -13,16 +13,24 @@ namespace BusinessLayer.BL
     public class BL_Institucion : IBL_Institucion
     {
         private readonly IRepositorioInstitucion repositorio;
+        private readonly IRepositorioProducto repositorioProducto;
         private readonly IMapper mapper;
 
-        public BL_Institucion(IRepositorioInstitucion _repositorio,IMapper _mapper)
+        public BL_Institucion(IRepositorioInstitucion _repositorio,IRepositorioProducto repositorioProducto, IMapper _mapper)
         {
             mapper = _mapper;
             repositorio = _repositorio;
+            this.repositorioProducto = repositorioProducto;
         }
 
         public InstitucionDto AddInstitucion(InstitucionCreateDto x)
         {
+            var producto = repositorioProducto.Get(x.ProductoId);
+            if(producto.Precios.Count() <= 0)
+            {
+                throw new Exception("El producto seleccionado no tiene precio");
+            }
+
             var institucion = mapper.Map<TenantInstitucion>(x);
 
             institucion.Id = Guid.NewGuid();

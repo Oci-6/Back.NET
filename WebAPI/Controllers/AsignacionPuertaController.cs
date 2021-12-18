@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dominio;
 using Shared.Dominio.AsignacionPuerta;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,10 @@ namespace WebAPI.Controllers
 
         // GET: api/<AsignacionPuertaController>
         [HttpGet("Edificio/{idEdificio}")]
-        public ActionResult<IEnumerable<AsignacionPuertaDto>> GetAll(Guid idEdificio)
+        public async Task<ActionResult<PaginatedListDto<AsignacionPuertaDto>>> GetAllAsync(Guid idEdificio, [FromQuery] int page = 1, int take = 10)
         {
-            return Ok(asignacionPuerta.GetAsignaciones(idEdificio));
+            var res = await asignacionPuerta.GetAsignacionesAsync(idEdificio, page, take);
+            return Ok(res);
         }
 
         // GET api/<AsignacionPuertaController>/5

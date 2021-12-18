@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dominio.Producto;
 using System;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductoController : ControllerBase
     {
         private readonly IBL_Producto ibl_Producto;
@@ -43,6 +45,8 @@ namespace WebAPI.Controllers
 
         // POST api/<ProductoController>
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Post([FromBody] AgregarProductoDto x)
         {
             return Ok(ibl_Producto.AddProducto(x));
@@ -50,6 +54,8 @@ namespace WebAPI.Controllers
 
         // PUT api/<ProductoController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Put(Guid id, [FromBody] ProductoDto x)
         {
             var producto = ibl_Producto.GetProducto(id);
@@ -63,6 +69,8 @@ namespace WebAPI.Controllers
 
         // DELETE api/<ProductoController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Delete(Guid id)
         {
             var producto = ibl_Producto.GetProducto(id);

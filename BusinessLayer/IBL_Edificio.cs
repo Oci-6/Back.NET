@@ -9,7 +9,7 @@ namespace BusinessLayer
 {
     public interface IBL_Edificio
     {
-        EdificioDto AddEdificio(EdificioDto x);
+        EdificioDto AddEdificio(EdificioCreateDto x);
         IEnumerable<EdificioDto> GetEdificios();
         EdificioDto GetEdificio(Guid id);
         void PutEdificio(EdificioDto x, Guid id);

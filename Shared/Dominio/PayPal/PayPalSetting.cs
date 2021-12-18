@@ -15,5 +15,6 @@ namespace Shared.Dominio.PayPal
         public string UrlApi { get; set; }
         public string CancelUrl { get; set; }
         public string ReturnUrl { get; set; }
+        public string FrontUrl { get; set; }
     }
 }

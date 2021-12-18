@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -16,20 +17,22 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PagoController : ControllerBase
     {
         private readonly IBL_Pago ibl_Pago;
         private readonly IBL_Factura ibl_Factura;
         private readonly PayPalSetting Configuration;
         private readonly IHttpContextAccessor contextAccessor;
+        private readonly IBL_Emails emails;
 
-        public PagoController(IBL_Pago _pago, IOptions<PayPalSetting> Configuration, IBL_Factura _factura, IHttpContextAccessor _contextAccessor)
+        public PagoController(IBL_Pago _pago, IOptions<PayPalSetting> Configuration, IBL_Factura _factura, IHttpContextAccessor _contextAccessor, IBL_Emails emails)
         {
             ibl_Pago = _pago;
             ibl_Factura = _factura;
             this.Configuration = Configuration.Value;
             this.contextAccessor = _contextAccessor;
-
+            this.emails = emails;
 
         }
 
@@ -55,6 +58,7 @@ namespace WebAPI.Controllers
 
         // POST api/<PagoController>
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Post([FromBody] AgregarPagoDto x)
         {
             return Ok(ibl_Pago.AddPago(x));
@@ -62,6 +66,7 @@ namespace WebAPI.Controllers
 
         // PUT api/<PagoController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Put(Guid id, [FromBody] PagoDto x)
         {
             var pago = ibl_Pago.GetPago(id);
@@ -75,6 +80,8 @@ namespace WebAPI.Controllers
 
         // DELETE api/<PagoController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdmin")]
+
         public ActionResult Delete(Guid id)
         {
             var pago = ibl_Pago.GetPago(id);
@@ -86,7 +93,9 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("Pagar/{IdFactura}")]
+        [HttpGet("Paypal/Pagar/{IdFactura}")]
+        [AllowAnonymous]
+
         public ActionResult Pago(Guid IdFactura)
         {
             var config = new Dictionary<string, string>();
@@ -141,7 +150,7 @@ namespace WebAPI.Controllers
                 description = "Pago de mensualidad",
                 amount = amount,
                 item_list = itemList,
-                custom = factura.Id.ToString() + "," + factura.TenantInstitucionId.ToString()
+                custom = factura.Id.ToString()
             });
 
             var payment = new Payment()
@@ -169,8 +178,9 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("success")]
-        public dynamic Success(string paymentId, string PayerId, string token)
+        [HttpGet("Paypal/success")]
+        [AllowAnonymous]
+        public async Task SuccessAsync(string paymentId, string PayerId, string token)
         {
             var config = new Dictionary<string, string>();
             config.Add("mode", "sandbox");
@@ -186,15 +196,20 @@ namespace WebAPI.Controllers
             var executePayment = payment.Execute(apiContext, paymentExecution);
             if(executePayment.state == "approved")
             {
-                var ids = executePayment.transactions.Where(t => t.custom != null).FirstOrDefault().custom.Split(",");
-                contextAccessor.HttpContext?.Request.Headers.Add("TenantId", ids[1]);
-                ibl_Pago.AddPago(new AgregarPagoDto() { FacturaId = Guid.Parse(ids[0]) });
+                var id = executePayment.transactions.Where(t => t.custom != null).FirstOrDefault().custom;
+                var res = ibl_Pago.AddPago(new AgregarPagoDto() { FacturaId = Guid.Parse(id) });
+                await emails.EnviarPagoAsync(ibl_Factura.GetFactura(Guid.Parse(id)));
+                Response.Redirect(Configuration.FrontUrl + "/success?id=" + res.Id.ToString());
             }
-            return Ok(executePayment);
+            else
+            {
+                Response.Redirect(Configuration.FrontUrl + "/failed");
+            }
         }
 
-        [HttpGet("cancel")]
-        public dynamic Cancel(string paymentId, string PayerId, string token)
+        [HttpGet("Paypal/cancel")]
+        [AllowAnonymous]
+        public void Cancel(string paymentId, string PayerId, string token)
         {
             var config = new Dictionary<string, string>();
             config.Add("mode", "sandbox");
@@ -207,7 +222,7 @@ namespace WebAPI.Controllers
             var paymentExecution = new PaymentExecution() { payer_id = PayerId };
             var payment = new Payment() { id = paymentId };
 
-            return Ok(payment);
+            Response.Redirect(Configuration.FrontUrl + "/failed");
         }
     }
 }

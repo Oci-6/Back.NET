@@ -2,6 +2,7 @@
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
 using Microsoft.AspNetCore.Http;
+using Shared.Dominio;
 using Shared.Dominio.AsignacionPuerta;
 using Shared.Dominio.Puerta;
 using System;
@@ -83,9 +84,9 @@ namespace BusinessLayer.BL
             return mapper.Map<PuertaDto>(repositorioPuerta.GetByPortero(portero));
         }
 
-        public IEnumerable<AsignacionPuertaDto> GetAsignaciones(Guid id)
+        public async Task<PaginatedListDto<AsignacionPuertaDto>> GetAsignacionesAsync(Guid id, int take, int skip)
         {
-            return mapper.Map<IEnumerable<AsignacionPuertaDto>>(repositorio.GetAll(id));
+            return mapper.Map<PaginatedListDto<AsignacionPuertaDto>>(await repositorio.GetPaginatedList(id, take, skip));
         }
 
         public void PutAsignacion(AsignacionPuertaCreateDto x, Guid id)
@@ -99,5 +100,6 @@ namespace BusinessLayer.BL
 
             repositorio.Update(asignacion);
         }
+
     }
 }

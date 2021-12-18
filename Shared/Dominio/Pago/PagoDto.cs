@@ -13,5 +13,6 @@ namespace Shared.Dominio.Pago
         public float Monto { get; set; }
 
         public Guid FacturaId { get; set; }
+        public DateTime CreadoEn { get; set; }
     }
 }

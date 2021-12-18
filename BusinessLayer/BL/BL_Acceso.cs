@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
+using Shared.Dominio;
 using Shared.Dominio.Acceso;
 using Shared.Dominio.Usuario;
 using SkyBiometry.Client.FC;
@@ -54,9 +55,9 @@ namespace BusinessLayer.BL
             return mapper.Map<IEnumerable<AccesoDto>>(repositorio.GetAll());
         }
 
-        public IEnumerable<AccesoDto> GetAllEdificio(Guid idEdificio)
+        public async Task<PaginatedListDto<AccesoDto>> GetAllEdificioAsync(Guid idEdificio, int page, int skip)
         {
-            return mapper.Map<IEnumerable<AccesoDto>>(repositorio.GetAllEdificio(idEdificio));
+            return mapper.Map<PaginatedListDto<AccesoDto>>(await repositorio.GetPaginatedList(idEdificio, page, skip));
         }
 
         public AccesoDto PutAcceso(AccesoCreateDto x, Guid id)

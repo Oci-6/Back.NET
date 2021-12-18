@@ -48,7 +48,15 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] InstitucionCreateDto x)
         {
-            return Ok(bl.AddInstitucion(x));
+            try
+            {
+               
+                return Ok(bl.AddInstitucion(x));
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // PUT api/<InstitucionController>/{id}

@@ -10,6 +10,9 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
+using BusinessLayer;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace WebAPI.Controllers
 {
@@ -20,11 +23,13 @@ namespace WebAPI.Controllers
         private readonly BusinessLayer.IBL_Usuario _bl;
         private readonly IConfiguration _configuration;
         private readonly Boolean isLogged;
-        public LoginController(BusinessLayer.IBL_Usuario bl, IConfiguration configuration, IHttpContextAccessor contextAccessor)
+        private readonly IBL_Emails emails;
+        public LoginController(BusinessLayer.IBL_Usuario bl, IBL_Emails emails, IConfiguration configuration, IHttpContextAccessor contextAccessor)
         {
             _bl = bl;
             _configuration = configuration;
             isLogged = contextAccessor.HttpContext.User.Identity != null;
+            this.emails = emails;
         }
 
         [HttpPost]
@@ -44,6 +49,7 @@ namespace WebAPI.Controllers
                     var claims = new ClaimsIdentity();
                     claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id));
                     claims.AddClaim(new Claim(ClaimTypes.Email, usuario.Email));
+                    claims.AddClaim(new Claim("Tenant", usuario.TenantInstitucionId != null ? usuario.TenantInstitucionId.ToString() : ""));
                     roles.ToList().ForEach(i => claims.AddClaim(new Claim(ClaimTypes.Role, i)));
                     var expira = DateTime.Now.AddHours(4);
 
@@ -76,7 +82,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Ya existe una sesión");
             }
-            
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Shared.Dominio.AsignacionPuerta;
+﻿using Shared.Dominio;
+using Shared.Dominio.AsignacionPuerta;
 using Shared.Dominio.Puerta;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace BusinessLayer
     public interface IBL_AsignacionPuerta
     {
         AsignacionPuertaDto AddAsignacion(AsignacionPuertaCreateDto x);
-        IEnumerable<AsignacionPuertaDto> GetAsignaciones(Guid id);
         AsignacionPuertaDto GetAsignacion(Guid id);
         PuertaDto GetActual();
+        Task<PaginatedListDto<AsignacionPuertaDto>> GetAsignacionesAsync(Guid id, int take, int skip);
         void DesAsignar();
         void PutAsignacion(AsignacionPuertaCreateDto x, Guid id);
         void DeleteAsignacion(Guid id);
