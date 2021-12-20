@@ -11,5 +11,7 @@ namespace DataAccessLayer.Repositorios
     {
         new IEnumerable<Factura> GetAll();
         new Factura Get(Guid id);
+        IEnumerable<Factura> GetAll(Guid idTenant);
+
     }
 }

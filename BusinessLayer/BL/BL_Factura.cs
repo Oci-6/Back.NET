@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccessLayer.Entidades;
 using DataAccessLayer.Repositorios;
+using Microsoft.AspNetCore.Http;
 using Shared.Dominio.Factura;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,19 @@ namespace BusinessLayer.BL
         private readonly IRepositorio<Precio> repositorio2;
         private readonly IRepositorioInstitucion repositorioI;
         private readonly IMapper mapper;
+        private readonly Guid tenantId;
 
-        public BL_Factura(IRepositorioFactura _repositorio, IRepositorioInstitucion _repositorioI, IRepositorio<Precio> _repositorio2, IMapper _mapper)
+        public BL_Factura(IRepositorioFactura _repositorio, IRepositorioInstitucion _repositorioI, IRepositorio<Precio> _repositorio2, IMapper _mapper,IHttpContextAccessor contextAccessor)
         {
+            var tenantActual = contextAccessor.HttpContext?.Request.Headers["TenantId"];
+            if (!string.IsNullOrWhiteSpace(tenantActual))
+            {
+                tenantId = Guid.Parse(tenantActual);
+            }
+            else
+            {
+                tenantId = Guid.Empty;
+            }
             repositorio = _repositorio;
             repositorio2 =  _repositorio2;
             repositorioI = _repositorioI;
@@ -65,7 +76,7 @@ namespace BusinessLayer.BL
 
         public IEnumerable<FacturaDto> GetFacturas()
         {
-            var facturas = repositorio.GetAll();
+            var facturas = repositorio.GetAll(tenantId);
             return mapper.Map<IEnumerable<FacturaDto>>(facturas);
         }
 

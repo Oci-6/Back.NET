@@ -28,5 +28,10 @@ namespace DataAccessLayer.Repositorios
         {
             return entities.Include(Factura => Factura.Pago).AsEnumerable();
         }
+
+        public IEnumerable<Factura> GetAll(Guid idTenant)
+        {
+            return entities.Include(Factura => Factura.Pago).Where(f => f.TenantInstitucionId == idTenant).AsEnumerable();
+        }
     }
 }
